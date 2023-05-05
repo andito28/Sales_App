@@ -35,7 +35,7 @@ class AuthController extends Controller
             $data['email'] = $user->email;
             $data['role'] = $user->role;
             $data['token']  = $user->createToken('nApp')->accessToken;
-            return $this->responseJson("Success",200,"Berhasil Login",$data);
+            return $this->responseJson("Success",200,"Successful Login",$data);
         } else {
             return response()->json(['error' => 'Unauthorised'], 401);
         }
@@ -46,8 +46,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required',
-            'password-confirm' => 'required',
+            'password' => 'required|confirmed',
+            'password_confirmation' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -56,40 +56,53 @@ class AuthController extends Controller
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
+        $input['role'] = "sales";
         $user = User::create($input);
-        $data['token'] = $user->createToken('nApp')->accessToken;
         $data['name'] = $user->name;
-        return $this->responseJson("Success",200,"Berhasil Register",$data);
+        $data['email'] = $user->email;
+        $data['token'] = $user->createToken('nApp')->accessToken;
+        return $this->responseJson("Success",200,"Successful Register",$data);
+    }
+
+    public function getProfile(){
+        $user = Auth::user();
+        $data['name'] = $user->name;
+        $data['email'] = $user->email;
+        if($user->photo == null){
+            $data['photo'] = null;
+        }else{
+            $data['photo'] = url('/storage/photo/'.$user->photo);
+        }
+        return $this->responseJson("Success",200,"Profile User",$data);
     }
 
     public function updateProfile(Request $request)
     {
         $data = Auth::user();
-        if ($request->file('foto')) {
-            $file = $request->file('foto')->store('profile', 'public');
-            if ($update->foto && file_exists(storage_path('app/public/' . $update->foto))) {
-                Storage::delete('public/' . $update->foto);
-                $file = $request->file('foto')->store('profile', 'public');
+        $files = $request->file('photo');
+        if ($files) {
+            if($data->photo != null){
+                Storage::delete('/public/photo/'. $data->photo);
             }
+            $file_name = date('YmdHis').str_replace('', '', $files->getClientOriginalName());
+            Storage::disk('local')->putFileAs('public/photo', $files, $file_name);
+        }else{
+            $file_name = $data->photo;
         }
-
-        $data->update([
-            "name" => request('name'),
-            "email" => request('email'),
-            "foto" => $file,
-            'password' => bcrypt($request->password),
-            'password-confirmation' => bcrypt($request->password),
-        ]);
-        return $this->responseJson("Success",200,"Berhasil update data",$data);
+        $data->name = $request->name;
+        $data->email = $request->email;
+        $data->photo = $file_name;
+        $data->save();
+        return $this->responseJson("Success",200,"Successful updated data",$data);
     }
 
     public function logout(Request $request){
         if(Auth::check()){
             $user = Auth::user()->token();
             $user->revoke();
-            return $this->responseJson("Success",200,"Berhasil logout",null);
+            return $this->responseJson("Success",200,"Successful logout",null);
         } else{
-            return $this->responseJson("Failed",500,"Gagal Logout",null);
+            return $this->responseJson("Failed",500,"Logout Failed",null);
         }
     }
 }
