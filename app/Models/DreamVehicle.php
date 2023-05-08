@@ -5,26 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reminder extends Model
+class DreamVehicle extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
         'contact_id',
-        'title',
-        'status',
-        'date',
-        'time',
-        'location'
+        'vehicle_brand',
+        'vehicle_name',
+        'vehicle_type',
+        'transmission',
+        'color',
+        'picture'
     ];
-
-    public function User(){
-        return $this->belongsTo(User::class);
-    }
 
     public function Contact(){
         return $this->belongsTo(Contact::class);
     }
 
+    public function Transaction(){
+        return $this->hasOne(Transaction::class);
+    }
 }

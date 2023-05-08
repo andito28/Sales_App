@@ -8,4 +8,43 @@ use Illuminate\Database\Eloquent\Model;
 class Contact extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'nama',
+        'photo'
+    ];
+
+    public function User(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function Phone(){
+        return $this->hasMany(Phone::class);
+    }
+
+    public function Email(){
+        return $this->hasMany(Phone::class);
+    }
+
+    public function Customer(){
+        return $this->hasOne(Customer::class);
+    }
+
+    public function DatabaseOrigin(){
+        return $this->hasMany(DatabaseOrigin::class);
+    }
+
+    public function DreamVehicle(){
+        return $this->hasMany(DreamVehicle::class);
+    }
+
+    public function Agenda(){
+        return $this->hasMany(Agenda::class);
+    }
+
+    public function Reminder(){
+        return $this->hasMany(Reminder::class);
+    }
+
 }
