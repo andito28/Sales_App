@@ -15,9 +15,9 @@ class CreateVehiclesTable extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vehicle_brand_id')->constrained('vehicle_brand')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('vehicle_name_id')->constrained('vehicle_name')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('vehicle_type_id')->constrained('vehicle_type')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('vehicle_brand_id')->constrained('vehicle_brands')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('vehicle_name_id')->constrained('vehicle_names')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('vehicle_type_id')->constrained('vehicle_types')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
