@@ -61,4 +61,17 @@ class User extends Authenticatable
     public function Subscriber(){
         return $this->hasOne(Subscriber::class);
     }
+
+    public function Notification(){
+        return $this->hasMany(Notification::class);
+    }
+
+    public function Affiliate(){
+        return $this->hasOne(Affiliate::class);
+    }
+
+    public function UserFee(){
+        return $this->hasMany(UserFee::class);
+    }
+
 }

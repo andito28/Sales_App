@@ -27,14 +27,6 @@ class Contact extends Model
         return $this->hasMany(Phone::class);
     }
 
-    public function Customer(){
-        return $this->hasOne(Customer::class);
-    }
-
-    public function DatabaseOrigin(){
-        return $this->hasMany(DatabaseOrigin::class);
-    }
-
     public function DreamVehicle(){
         return $this->hasMany(DreamVehicle::class);
     }
@@ -46,5 +38,10 @@ class Contact extends Model
     public function Reminder(){
         return $this->hasMany(Reminder::class);
     }
+
+    public function SubmissionPhoto(){
+        return $this->hasMany(SubmissionPhoto::class);
+    }
+
 
 }

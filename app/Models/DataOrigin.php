@@ -5,14 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ToDo extends Model
+class DataOrigin extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'selected',
-        'notes'
+        'information'
     ];
-
 }

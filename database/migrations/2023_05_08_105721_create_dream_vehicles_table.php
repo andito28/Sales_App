@@ -16,13 +16,21 @@ class CreateDreamVehiclesTable extends Migration
         Schema::create('dream_vehicles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('condition');
-            $table->string('vehicle_brand');
-            $table->string('vehicle_name');
-            $table->string('vehicle_type');
-            $table->string('transmission');
-            $table->string('picture');
-            $table->string('sold_status');
+            $table->enum('status',['dream','bought']);
+            $table->string('item_condition');
+            $table->foreignId('vehicle_brand_id')->constrained('vehicle_brands')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('vehicle_name_id')->constrained('vehicle_names')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('vehicle_type_id')->constrained('vehicle_types')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('vehicle_color_id')->constrained('vehicle_colors')->onDelete('cascade')->onUpdate('cascade');
+            $table->enum('transmission',['manual','automatic']);
+            $table->enum('payment',['cash','kredit']);
+            $table->string('leasing')->nullable();
+            $table->integer('dp')->nullable();
+            $table->string('repayment')->nullable();
+            $table->string('installment')->nulllable();
+            $table->string('number_of_month')->nullable();
+            $table->string('notes');
+            $table->enum('sold_status',['true','false']);
             $table->timestamps();
         });
     }

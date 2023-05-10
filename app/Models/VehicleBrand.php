@@ -12,8 +12,4 @@ class VehicleBrand extends Model
     protected $fillable = [
         'brand'
     ];
-
-    public function Vehicle(){
-        return $this->hasOne(Vehicle::class);
-    }
 }

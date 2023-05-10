@@ -17,7 +17,7 @@ class CreatePhonesTable extends Migration
             $table->id();
             $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade')->onUpdate('cascade');
             $table->string('phone_number');
-            $table->enum('whatsapp',['true','false']);
+            $table->enum('type',['wa','phone']);
             $table->timestamps();
         });
     }

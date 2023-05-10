@@ -13,10 +13,10 @@ class Reminder extends Model
         'user_id',
         'contact_id',
         'title',
-        'status',
-        'date',
+        'date_reminder',
         'time',
-        'location'
+        'notes',
+        'frequency'
     ];
 
     public function User(){

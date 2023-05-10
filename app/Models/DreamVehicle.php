@@ -22,8 +22,4 @@ class DreamVehicle extends Model
     public function Contact(){
         return $this->belongsTo(Contact::class);
     }
-
-    public function Transaction(){
-        return $this->hasOne(Transaction::class);
-    }
 }

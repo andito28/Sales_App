@@ -5,16 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DatatabaseOrigin extends Model
+class UserFee extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'contact_id',
-        'origin'
+        'user_id',
+        'fee',
+        'paid'
     ];
 
-    public function Contact(){
-        return $this->belongsTo(Contact::class);
+    public function User(){
+        return $this->belongsTo(User::class);
     }
+
 }

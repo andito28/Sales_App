@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCustomersTable extends Migration
+class CreateSubmissionPhotosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,10 @@ class CreateCustomersTable extends Migration
      */
     public function up()
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('submission_photos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('date_of_birth');
-            $table->string('gender');
-            $table->string('regency');
-            $table->string('subdistrict');
-            $table->string('village');
-            $table->string('address');
-            $table->string('company');
-            $table->string('notes');
+            $table->string('photo');
             $table->timestamps();
         });
     }
@@ -35,6 +28,6 @@ class CreateCustomersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('submission_photos');
     }
 }

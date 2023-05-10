@@ -5,14 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ToDo extends Model
+class Notification extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'selected',
-        'notes'
+        'notification',
+        'read'
     ];
 
+    public function User(){
+        return $this->belongsTo(User::class);
+    }
 }
