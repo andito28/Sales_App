@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Laravel\Passport\Passport;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -33,7 +34,6 @@ class AuthController extends Controller
             $user = Auth::user();
             $data['nama'] = $user->name;
             $data['email'] = $user->email;
-            $data['role'] = $user->role;
             $data['token']  = $user->createToken('nApp')->accessToken;
             return $this->responseJson("Success",200,"Successful Login",$data);
         } else {
@@ -46,6 +46,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email|unique:users',
+            'phone' => 'required|unique:users',
             'password' => 'required|confirmed',
             'password_confirmation' => 'required',
         ]);
@@ -56,10 +57,11 @@ class AuthController extends Controller
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
-        $input['role'] = "sales";
         $user = User::create($input);
         $data['name'] = $user->name;
         $data['email'] = $user->email;
+        $data['phone'] = $user->phone;
+        $data['firebase_token'] = $user->firebase_token;
         $data['token'] = $user->createToken('nApp')->accessToken;
         return $this->responseJson("Success",200,"Successful Register",$data);
     }
@@ -90,7 +92,7 @@ class AuthController extends Controller
             $file_name = $data->photo;
         }
         $data->name = $request->name;
-        $data->email = $request->email;
+        $data->phone = $request->phone;
         $data->photo = $file_name;
         $data->save();
         return $this->responseJson("Success",200,"Successful updated data",$data);
@@ -105,4 +107,13 @@ class AuthController extends Controller
             return $this->responseJson("Failed",500,"Logout Failed",null);
         }
     }
+
+    public function refreshToken(Request $request)
+    {
+        $request->user()->tokens()->delete();
+        $token = $request->user()->createToken('authToken')->accessToken;
+        $data['token'] = $token;
+        return $this->responseJson("Success",200,"Refresh token",$data);
+    }
+
 }

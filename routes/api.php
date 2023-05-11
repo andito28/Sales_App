@@ -14,6 +14,9 @@ Route::get('v1/check-reminder',[ReminderController::class,'checkReminder']);
 
 
 Route::group(['middleware' => ['auth:api']], function () {
+    //refresh token
+    Route::get('v1/refresh-token',[AuthController::class,'refreshToken']);
+
     //logout
     Route::get('v1/logout',[AuthController::class,'logout']);
 
