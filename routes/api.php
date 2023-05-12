@@ -46,5 +46,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('v1/get-todo',[ToDoController::class,'getAllByUser']);
     Route::post('v1/create-todo',[ToDoController::class,'createToDo']);
     Route::put('v1/update-todo/{id}',[ToDoController::class,'updateToDo']);
+    Route::delete('v1/delete-todo/{id}',[ToDoController::class,'destroyTodo']);
 
 });

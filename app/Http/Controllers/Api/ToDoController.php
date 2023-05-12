@@ -53,4 +53,10 @@ class ToDoController extends Controller
         $todo->save();
         return ResponseHelper::responseJson("Success",200,"Successful update data",$todo);
     }
+
+    public function destroyToDo($id){
+        $todo = ToDo::findOrFail($id);
+        $todo->delete();
+        return ResponseHelper::responseJson("Success",200,"Successful delete data",$todo);
+    }
 }
