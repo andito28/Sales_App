@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReminderController;
 
 //login & Register
@@ -31,5 +32,13 @@ Route::group(['middleware' => ['auth:api']], function () {
     //contact
     Route::get('v1/get-contact',[ContactController::class,'getAllContact']);
     Route::post('v1/create-contact',[ContactController::class,'createContact']);
+    Route::post('v1/update-contact/{id}',[ContactController::class,'updateContact']);
+    Route::get('v1/get-status-contact',[ContactController::class,'getStatusContact']);
+
+    //vehicle
+    Route::get('v1/get-vehicle-name',[VehicleController::class,'getVehicleName']);
+    Route::get('v1/get-vehicle-brand',[VehicleController::class,'getVehicleBrand']);
+    Route::get('v1/get-vehicle-type',[VehicleController::class,'getVehicleType']);
+    Route::get('v1/get-vehicle-color',[VehicleController::class,'getVehicleColor']);
 
 });

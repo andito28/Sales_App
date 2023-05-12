@@ -12,8 +12,21 @@ class Contact extends Model
     protected $fillable = [
         'user_id',
         'data_origin_id',
-        'nama',
-        'photo'
+        'name',
+        'photo',
+        'city',
+        'address',
+        'subdistrict',
+        'village',
+        'company',
+        'date_of_birth',
+        'hobby',
+        'relationship_status',
+        'partner_name',
+        'partner_company',
+        'number_of_children',
+        'contact_record',
+        'supporting_notes'
     ];
 
     public function User(){
@@ -28,7 +41,7 @@ class Contact extends Model
     }
 
     public function Email(){
-        return $this->hasMany(Phone::class);
+        return $this->hasMany(Email::class);
     }
 
     public function DreamVehicle(){

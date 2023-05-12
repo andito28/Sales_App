@@ -14,8 +14,9 @@ class CreateVehicleTypesTable extends Migration
     public function up()
     {
         Schema::create('vehicle_types', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('type');
             $table->timestamps();
         });
     }
