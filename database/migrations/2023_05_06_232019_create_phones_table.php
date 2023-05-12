@@ -17,7 +17,7 @@ class CreatePhonesTable extends Migration
             $table->id();
             $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade')->onUpdate('cascade');
             $table->string('phone_number');
-            $table->enum('type',['wa','phone']);
+            $table->enum('type',['phone','wa']);
             $table->timestamps();
         });
     }

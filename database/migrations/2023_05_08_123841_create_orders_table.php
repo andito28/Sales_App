@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('subscription_package_id')->constrained('subscription_packages')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('total_price');
-            $table->enum('status',['paid','unpaid']);
+            $table->enum('status',['unpaid','paid']);
             $table->timestamps();
         });
     }

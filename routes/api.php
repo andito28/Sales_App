@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ToDoController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReminderController;
@@ -32,7 +33,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     //contact
     Route::get('v1/get-contact',[ContactController::class,'getAllContact']);
     Route::post('v1/create-contact',[ContactController::class,'createContact']);
-    Route::post('v1/update-contact/{id}',[ContactController::class,'updateContact']);
+    Route::put('v1/update-contact/{id}',[ContactController::class,'updateContact']);
     Route::get('v1/get-status-contact',[ContactController::class,'getStatusContact']);
 
     //vehicle
@@ -40,5 +41,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('v1/get-vehicle-brand',[VehicleController::class,'getVehicleBrand']);
     Route::get('v1/get-vehicle-type',[VehicleController::class,'getVehicleType']);
     Route::get('v1/get-vehicle-color',[VehicleController::class,'getVehicleColor']);
+
+    //ToDo
+    Route::get('v1/get-todo',[ToDoController::class,'getAllByUser']);
+    Route::post('v1/create-todo',[ToDoController::class,'createToDo']);
+    Route::put('v1/update-todo/{id}',[ToDoController::class,'updateToDo']);
 
 });

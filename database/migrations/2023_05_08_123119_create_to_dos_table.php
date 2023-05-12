@@ -16,7 +16,7 @@ class CreateToDosTable extends Migration
         Schema::create('to_dos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->enum('selected',['true','false']);
+            $table->enum('selected',['false','true']);
             $table->text('notes');
             $table->timestamps();
         });

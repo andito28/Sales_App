@@ -17,7 +17,7 @@ class CreateNotificationsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('notification');
-            $table->enum('read',['true','false']);
+            $table->enum('read',['false','true']);
             $table->timestamps();
         });
     }
