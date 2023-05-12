@@ -11,12 +11,16 @@ class Contact extends Model
 
     protected $fillable = [
         'user_id',
+        'data_origin_id',
         'nama',
         'photo'
     ];
 
     public function User(){
         return $this->belongsTo(User::class);
+    }
+    public function DataOrigin(){
+        return $this->belongsTo(DataOrigin::class);
     }
 
     public function Phone(){
@@ -42,6 +46,5 @@ class Contact extends Model
     public function SubmissionPhoto(){
         return $this->hasMany(SubmissionPhoto::class);
     }
-
 
 }

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ReminderController;
 
 //login & Register
@@ -23,4 +24,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     //profile
     Route::get('v1/get-profile',[AuthController::class,'getProfile']);
     Route::put('v1/update-profile',[AuthController::class,'updateProfile']);
+
+    //data origin
+    Route::get('v1/get-data-origin',[ContactController::class,'getDataOrigin']);
+
+    //contact
+    Route::get('v1/get-contact',[ContactController::class,'getAllContact']);
+    Route::post('v1/create-contact',[ContactController::class,'createContact']);
+
 });

@@ -9,21 +9,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\ResponseHelper;
 
 class AuthController extends Controller
 {
-    public static function responseJson($status,$code,$message,$data){
-        $meta = [
-            "Message" => $message,
-            "Code" => $code,
-            "Status" => $status
-        ];
-        $response = [
-            "Meta" => $meta,
-            "Data" => $data
-        ];
-        return response()->json($response);
-    }
 
     public function login()
     {
@@ -35,7 +24,7 @@ class AuthController extends Controller
             $data['nama'] = $user->name;
             $data['email'] = $user->email;
             $data['token']  = $user->createToken('nApp')->accessToken;
-            return $this->responseJson("Success",200,"Successful Login",$data);
+            return ResponseHelper::responseJson("Success",200,"Successful Login",$data);
         } else {
             return response()->json(['error' => 'Unauthorised'], 401);
         }
@@ -63,7 +52,7 @@ class AuthController extends Controller
         $data['phone'] = $user->phone;
         $data['firebase_token'] = $user->firebase_token;
         $data['token'] = $user->createToken('nApp')->accessToken;
-        return $this->responseJson("Success",200,"Successful Register",$data);
+        return ResponseHelper::responseJson("Success",200,"Successful Register",$data);
     }
 
     public function getProfile(){
@@ -75,7 +64,7 @@ class AuthController extends Controller
         }else{
             $data['photo'] = url('/storage/photo/'.$user->photo);
         }
-        return $this->responseJson("Success",200,"Profile User",$data);
+        return ResponseHelper::responseJson("Success",200,"Profile User",$data);
     }
 
     public function updateProfile(Request $request)
@@ -95,16 +84,16 @@ class AuthController extends Controller
         $data->phone = $request->phone;
         $data->photo = $file_name;
         $data->save();
-        return $this->responseJson("Success",200,"Successful updated data",$data);
+        return ResponseHelper::responseJson("Success",200,"Successful updated data",$data);
     }
 
     public function logout(Request $request){
         if(Auth::check()){
             $user = Auth::user()->token();
             $user->revoke();
-            return $this->responseJson("Success",200,"Successful logout",null);
+            return ResponseHelper::responseJson("Success",200,"Successful logout",null);
         } else{
-            return $this->responseJson("Failed",500,"Logout Failed",null);
+            return ResponseHelper::responseJson("Failed",500,"Logout Failed",null);
         }
     }
 
@@ -113,7 +102,7 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
         $token = $request->user()->createToken('authToken')->accessToken;
         $data['token'] = $token;
-        return $this->responseJson("Success",200,"Refresh token",$data);
+        return ResponseHelper::responseJson("Success",200,"Refresh token",$data);
     }
 
 }

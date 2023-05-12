@@ -12,4 +12,8 @@ class DataOrigin extends Model
     protected $fillable = [
         'information'
     ];
+
+    public function DataOrigin(){
+        return $this->hasMany(DataOrigin::class);
+    }
 }
