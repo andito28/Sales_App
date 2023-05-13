@@ -13,7 +13,7 @@ class Reminder extends Model
         'user_id',
         'contact_id',
         'title',
-        'date_reminder',
+        'reminder_date',
         'time',
         'notes',
         'frequency'

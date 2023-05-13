@@ -49,11 +49,18 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::put('v1/update-todo/{id}',[ToDoController::class,'updateToDo']);
     Route::delete('v1/delete-todo/{id}',[ToDoController::class,'destroyTodo']);
 
-    //ToDo
+    //Agenda
     Route::get('v1/get-agenda',[AgendaController::class,'getAllAgenda']);
     Route::get('v1/get-agenda/{id}',[AgendaController::class,'GetAgenda']);
     Route::post('v1/create-agenda',[AgendaController::class,'createAgenda']);
     Route::put('v1/update-agenda/{id}',[AgendaController::class,'updateAgenda']);
     Route::delete('v1/delete-agenda/{id}',[AgendaController::class,'destroyAgenda']);
+
+    //Agenda
+    Route::get('v1/get-reminder',[ReminderController::class,'getAllReminder']);
+    Route::get('v1/get-reminder/{id}',[ReminderController::class,'GetReminder']);
+    Route::post('v1/create-reminder',[ReminderController::class,'createReminder']);
+    Route::put('v1/update-reminder/{id}',[ReminderController::class,'updateReminder']);
+    Route::delete('v1/delete-reminder/{id}',[ReminderController::class,'destroyReminder']);
 
 });
