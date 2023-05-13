@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ToDoController extends Controller
 {
-    public function getAllByUser(){
+    public function getAllToDo(){
         $data = [];
         $todo = ToDo::where('user_id',Auth::user()->id)->get();
         foreach($todo as $value){

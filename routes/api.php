@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ToDoController;
+use App\Http\Controllers\Api\AgendaController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReminderController;
@@ -43,9 +44,16 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('v1/get-vehicle-color',[VehicleController::class,'getVehicleColor']);
 
     //ToDo
-    Route::get('v1/get-todo',[ToDoController::class,'getAllByUser']);
+    Route::get('v1/get-todo',[ToDoController::class,'getAllToDo']);
     Route::post('v1/create-todo',[ToDoController::class,'createToDo']);
     Route::put('v1/update-todo/{id}',[ToDoController::class,'updateToDo']);
     Route::delete('v1/delete-todo/{id}',[ToDoController::class,'destroyTodo']);
+
+    //ToDo
+    Route::get('v1/get-agenda',[AgendaController::class,'getAllAgenda']);
+    Route::get('v1/get-agenda/{id}',[AgendaController::class,'GetAgenda']);
+    Route::post('v1/create-agenda',[AgendaController::class,'createAgenda']);
+    Route::put('v1/update-agenda/{id}',[AgendaController::class,'updateAgenda']);
+    Route::delete('v1/delete-agenda/{id}',[AgendaController::class,'destroyAgenda']);
 
 });

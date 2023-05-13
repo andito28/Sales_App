@@ -18,7 +18,7 @@ class CreateAgendasTable extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade')->onUpdate('cascade');
             $table->string('title');
-            $table->string('status');
+            $table->enum('status',['penting','mendesak','biasa','none']);
             $table->date('date');
             $table->time('time');
             $table->string('location');
