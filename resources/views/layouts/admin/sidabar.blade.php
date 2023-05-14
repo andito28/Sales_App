@@ -14,7 +14,7 @@
                 <span>Dashboard</span>
             </a>
         </li>
-        <li class="">
+        {{-- <li class="">
             <a href="">
                 <div class="icon_menu">
                     <img src="{{ asset('pages/img/menu-icon/4.svg') }}" alt="">
@@ -53,6 +53,6 @@
                 </div>
                 <span>Booking Villa</span>
             </a>
-        </li>
+        </li> --}}
     </ul>
 </nav>

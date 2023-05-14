@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->text('firebase_token');
+            $table->enum('role',['sales','admin']);
             $table->rememberToken();
             $table->timestamps();
         });
