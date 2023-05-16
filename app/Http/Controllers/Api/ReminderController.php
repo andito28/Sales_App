@@ -66,7 +66,7 @@ class ReminderController extends Controller
             'frequency' => 'required'
         ]);
         if ($validator->fails()) {
-            return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
+            return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
         $reminder = new Reminder();
         $reminder->user_id = Auth::user()->id;
@@ -91,7 +91,7 @@ class ReminderController extends Controller
             'frequency' => 'required'
         ]);
         if ($validator->fails()) {
-            return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
+            return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
         $reminder = Reminder::findOrFail($id);
         $reminder->user_id = Auth::user()->id;

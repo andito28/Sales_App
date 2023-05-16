@@ -3,13 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Mail\MailClass;
+use App\Mail\SendEmail;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\PasswordReset;
+use Illuminate\Support\Carbon;
 use Laravel\Passport\Passport;
+use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Helpers\ResponseHelper;
 
 class AuthController extends Controller
 {
@@ -41,7 +47,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
+            return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
 
         $input = $request->all();
@@ -103,6 +109,48 @@ class AuthController extends Controller
         $token = $request->user()->createToken('authToken')->accessToken;
         $data['token'] = $token;
         return ResponseHelper::responseJson("Success",200,"Refresh token",$data);
+    }
+
+    public function forgetPassword(Request $request){
+
+        $user = User::where('email',$request->email)->get();
+        if($user->count() > 0){
+            $token = Str::random(40);
+            // $domain = parse_url(url('/'));
+            // $domain['host']
+            $domain =  'https://demo.ewalabs.com';
+            $url = $domain.'/reset-pasword?token='.$token;
+
+            $data['url'] = $url;
+            $data['email'] = $request->email;
+            $data['title'] = "Password Reset";
+            $data['body'] = "Please click on below link to reset your password.";
+
+            Mail::send('forgetPasswordMail',['data' => $data],function($message) use ($data){
+                $message->to($data['email'])->subject($data['title']);
+            });
+
+            // Mail::to($request->email)->send(new MailClass([
+            //     'name' => 'Test',
+            //     'email' => $request->email,
+            //     'subject' => 'Demo Email',
+            //     'message' => 'This is a demo email sent from PHPMailer with Laravel!'
+            // ]));
+
+            $date_time = Carbon::now()->format('Y-m-d H:i:s');
+            PasswordReset::updateOrCreate(
+                ['email' => $request->email],
+                [
+                    'email' => $request->email,
+                    'token' => $token,
+                    'created_at' => $date_time
+                ]
+                );
+            // $message['message'] = "Please check your mail to reset your password. ";
+            return ResponseHelper::responseJson("Success",200,"Please check your mail to reset your password.",null);
+        }else{
+            return ResponseHelper::responseJson("Failed",404,"User not found",null);
+        }
     }
 
 }

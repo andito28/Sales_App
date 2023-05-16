@@ -6,13 +6,13 @@ class ResponseHelper{
 
     public static function responseJson($status,$code,$message,$data){
         $meta = [
-            "Message" => $message,
-            "Code" => $code,
-            "Status" => $status
+            "message" => $message,
+            "code" => $code,
+            "status" => $status
         ];
         $response = [
-            "Meta" => $meta,
-            "Data" => $data
+            "meta" => $meta,
+            "data" => $data
         ];
         return response()->json($response,$code);
     }

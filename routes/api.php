@@ -9,9 +9,10 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReminderController;
 
-//login & Register
+//Auth
 Route::post('v1/login', [AuthController::class, 'login']);
 Route::post('v1/register', [AuthController::class, 'register']);
+Route::post('v1/forget-password', [AuthController::class, 'forgetPassword']);
 
 //Check Reminder
 Route::get('v1/check-reminder',[ReminderController::class,'checkReminder']);

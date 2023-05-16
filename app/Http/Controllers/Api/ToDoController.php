@@ -30,7 +30,7 @@ class ToDoController extends Controller
             'notes' => 'required'
         ]);
         if ($validator->fails()) {
-            return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
+            return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
         $todo = new ToDo();
         $todo->user_id = Auth::user()->id;
@@ -45,7 +45,7 @@ class ToDoController extends Controller
             'notes' => 'required'
         ]);
         if ($validator->fails()) {
-            return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
+            return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
         $todo = ToDo::findOrFail($id);
         $todo->notes = $request->notes;

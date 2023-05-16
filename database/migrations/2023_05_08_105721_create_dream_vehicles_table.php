@@ -29,6 +29,7 @@ class CreateDreamVehiclesTable extends Migration
             $table->string('repayment')->nullable();
             $table->string('installment')->nulllable();
             $table->string('number_of_month')->nullable();
+            $table->enum('ownership',['pribadi','perusahaan'])->nullable();
             $table->string('notes');
             $table->enum('sold_status',['false','true']);
             $table->timestamps();

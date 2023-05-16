@@ -11,12 +11,22 @@ class DreamVehicle extends Model
 
     protected $fillable = [
         'contact_id',
-        'vehicle_brand',
-        'vehicle_name',
-        'vehicle_type',
+        'status',
+        'item_condition',
+        'vehicle_brand_id',
+        'vehicle_name_id',
+        'vehicle_type_id',
+        'vehicle_color_id',
         'transmission',
-        'color',
-        'picture'
+        'payment',
+        'leasing',
+        'dp',
+        'repayment',
+        'installment',
+        'number_of_month',
+        'ownership',
+        'notes',
+        'sold_status'
     ];
 
     public function Contact(){

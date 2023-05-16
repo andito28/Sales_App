@@ -55,12 +55,12 @@ class ContactController extends Controller
                 'address' => $value->address,
                 'subdistrict' => $value->subdistrict,
                 'village' => $value->village,
-                'company' => $value->company,
+                'job' => $value->job,
                 'date_of_birth' => $value->date_of_birth,
                 'hobby' => $value->hobby,
                 'relationship_status' => $value->relationship_status,
                 'partner_name' => $value->partner_name,
-                'partner_company' => $value->partner_company,
+                'partner_job' => $value->partner_job,
                 'number_of_children' => $value->number_of_children,
                 'contact_record' => $value->contact_record,
                 'supporting_notes' => $value->supporting_notes
@@ -121,7 +121,7 @@ class ContactController extends Controller
             'data_origin' => 'required'
         ]);
         if ($validator->fails()) {
-            return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
+            return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
 
         $data = [];

@@ -51,7 +51,7 @@ class AgendaController extends Controller
             'location' => 'required'
         ]);
         if ($validator->fails()) {
-            return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
+            return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
         $agenda = new Agenda();
         $agenda->user_id = Auth::user()->id;
@@ -75,7 +75,7 @@ class AgendaController extends Controller
             'location' => 'required'
         ]);
         if ($validator->fails()) {
-            return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
+            return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
         $agenda = Agenda::findOrFail($id);
         $agenda->user_id = Auth::user()->id;
