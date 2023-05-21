@@ -58,7 +58,6 @@ class ReminderController extends Controller
     public function createReminder(Request $request){
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
-            'contact' => 'required',
             'title' => 'required',
             'reminder_date' => 'required',
             'time' => 'required',
@@ -83,7 +82,6 @@ class ReminderController extends Controller
     public function updateReminder(Request $request,$id){
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
-            'contact' => 'required',
             'title' => 'required',
             'reminder_date' => 'required',
             'time' => 'required',

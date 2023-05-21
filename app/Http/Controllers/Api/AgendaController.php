@@ -43,7 +43,6 @@ class AgendaController extends Controller
     public function createAgenda(Request $request){
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
-            'contact' => 'required',
             'status' => 'required',
             'title' => 'required',
             'date' => 'required',
@@ -67,7 +66,6 @@ class AgendaController extends Controller
     public function updateAgenda(Request $request,$id){
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
-            'contact' => 'required',
             'status' => 'required',
             'title' => 'required',
             'date' => 'required',
