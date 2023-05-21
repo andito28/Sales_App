@@ -152,4 +152,30 @@ class ContactController extends Controller
         }
         return ResponseHelper::responseJson("Success",200,"Data Status Contact",$contact);
     }
+
+    public function searchContact(Request $request){
+        $contact = Contact::where('name','like',"%".$request->name."%")->get();
+        $data = [];
+        foreach($contact as $value){
+            $phones = [];
+            foreach($value->Phone as $phone){
+                $phones[] = [
+                    'number' => $phone->phone_number,
+                    'type' => $phone->type
+                ];
+            }
+            $emails = [];
+            foreach($value->Email as $email){
+                $emails[] = $email->email;
+            }
+            $data[] = [
+                'data_origin' => $value->DataOrigin->information,
+                'name' => $value->name,
+                'status' => $value->status,
+                'phone_number' => $phones,
+                'email' => $emails
+            ];
+        }
+        return ResponseHelper::responseJson("Success",200,"Successful Search Contact",$data);
+    }
 }

@@ -11,7 +11,7 @@ class Phone extends Model
     protected $fillable = [
         'contact_id',
         'phone_number',
-        'whatsapp'
+        'type'
     ];
 
     public function Contact(){

@@ -37,12 +37,31 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('v1/create-contact',[ContactController::class,'createContact']);
     Route::put('v1/update-contact/{id}',[ContactController::class,'updateContact']);
     Route::get('v1/get-status-contact',[ContactController::class,'getStatusContact']);
+    Route::get('v1/search-contact',[ContactController::class,'SearchContact']);
 
-    //vehicle
+    //vehicle name
     Route::get('v1/get-vehicle-name',[VehicleController::class,'getVehicleName']);
+    Route::post('v1/create-vehicle-name',[VehicleController::class,'createVehicleName']);
+    Route::put('v1/update-vehicle-name/{id}',[VehicleController::class,'updateVehicleName']);
+    Route::delete('v1/delete-vehicle-name/{id}',[VehicleController::class,'deleteVehicleName']);
+
+    //vehicle brand
     Route::get('v1/get-vehicle-brand',[VehicleController::class,'getVehicleBrand']);
+    Route::post('v1/create-vehicle-brand',[VehicleController::class,'createVehicleBrand']);
+    Route::put('v1/update-vehicle-brand/{id}',[VehicleController::class,'updateVehicleBrand']);
+    Route::delete('v1/delete-vehicle-brand/{id}',[VehicleController::class,'deleteVehicleBrand']);
+
+    //vehicle type
     Route::get('v1/get-vehicle-type',[VehicleController::class,'getVehicleType']);
+    Route::post('v1/create-vehicle-type',[VehicleController::class,'createVehicleType']);
+    Route::put('v1/update-vehicle-type/{id}',[VehicleController::class,'updateVehicleType']);
+    Route::delete('v1/delete-vehicle-type/{id}',[VehicleController::class,'deleteVehicleType']);
+
+    //vehicle color
     Route::get('v1/get-vehicle-color',[VehicleController::class,'getVehicleColor']);
+    Route::post('v1/create-vehicle-color',[VehicleController::class,'createVehicleColor']);
+    Route::put('v1/update-vehicle-color/{id}',[VehicleController::class,'updateVehicleColor']);
+    Route::delete('v1/delete-vehicle-color/{id}',[VehicleController::class,'deleteVehicleColor']);
 
     //ToDo
     Route::get('v1/get-todo',[ToDoController::class,'getAllToDo']);

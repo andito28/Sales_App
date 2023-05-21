@@ -16,7 +16,7 @@ class CreateAgendasTable extends Migration
         Schema::create('agendas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade')->onUpdate('cascade')->nullable();
             $table->string('title');
             $table->enum('status',['penting','mendesak','biasa','none']);
             $table->date('date');
