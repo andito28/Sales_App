@@ -71,14 +71,16 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     //Agenda
     Route::get('v1/get-agenda',[AgendaController::class,'getAllAgenda']);
-    Route::get('v1/get-agenda/{id}',[AgendaController::class,'GetAgenda']);
+    Route::get('v1/get-agenda/{id}',[AgendaController::class,'getAgenda']);
+    Route::get('v1/get-upcoming-agenda',[AgendaController::class,'getUpcomingAgenda']);
     Route::post('v1/create-agenda',[AgendaController::class,'createAgenda']);
     Route::put('v1/update-agenda/{id}',[AgendaController::class,'updateAgenda']);
     Route::delete('v1/delete-agenda/{id}',[AgendaController::class,'destroyAgenda']);
 
     //Agenda
     Route::get('v1/get-reminder',[ReminderController::class,'getAllReminder']);
-    Route::get('v1/get-reminder/{id}',[ReminderController::class,'GetReminder']);
+    Route::get('v1/get-reminder/{id}',[ReminderController::class,'getReminder']);
+    Route::get('v1/get-upcoming-reminder',[ReminderController::class,'getUpcomingReminder']);
     Route::post('v1/create-reminder',[ReminderController::class,'createReminder']);
     Route::put('v1/update-reminder/{id}',[ReminderController::class,'updateReminder']);
     Route::delete('v1/delete-reminder/{id}',[ReminderController::class,'destroyReminder']);

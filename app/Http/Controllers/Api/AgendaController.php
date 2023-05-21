@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use App\Models\Agenda;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
@@ -38,6 +39,29 @@ class AgendaController extends Controller
         $data['time'] = $agenda->time;
         $data['location'] = $agenda->location;
         return ResponseHelper::responseJson("Success",200,"Detail Agenda",$data);
+    }
+
+    public function getUpcomingAgenda(){
+        $date = Carbon::now()->toDateString();
+        $time = Carbon::now()->toTimeString();
+
+        $agenda = Agenda::where('user_id',Auth::user()->id)
+                ->whereDate('date','>=', $date)
+                ->latest('date')
+                ->first();
+        $data = null;
+        if($agenda){
+            if($time < $agenda->time){
+                $data['id'] = $agenda->id;
+                $data['contact'] = $agenda->Contact->name;
+                $data['status'] = $agenda->status;
+                $data['title'] = $agenda->title;
+                $data['date'] = $agenda->date;
+                $data['time'] = $agenda->time;
+                $data['location'] = $agenda->location;
+            }
+        }
+        return ResponseHelper::responseJson("Success",200,"Upcoming Agenda",$data);
     }
 
     public function createAgenda(Request $request){
