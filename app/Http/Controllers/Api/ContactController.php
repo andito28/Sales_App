@@ -139,10 +139,10 @@ class ContactController extends Controller
     }
 
     public function getStatusContact(){
-
         $data = [];
         $contact = Contact::select('status', \DB::raw('count(*) as total'))
         ->groupBy('status')
+        ->where('user_id',Auth::user()->id)
         ->get();
         foreach($contact as $value){
             $data[] = [
@@ -151,6 +151,17 @@ class ContactController extends Controller
             ];
         }
         return ResponseHelper::responseJson("Success",200,"Data Status Contact",$contact);
+    }
+
+    public function getInformationContact(){
+        $data['total_contact'] = Contact::where('user_id',Auth::user()->id)->count();
+        $data['hot'] = Contact::where('user_id',Auth::user()->id)->where('status','hot')->count();
+        $data['medium'] = Contact::where('user_id',Auth::user()->id)->where('status','medium')->count();
+        $data['low'] = Contact::where('user_id',Auth::user()->id)->where('status','low')->count();
+        $data['follow_up'] = Contact::where('user_id',Auth::user()->id)->where('status','follow_up')->count();
+        $data['next_follow_up'] = Contact::where('user_id',Auth::user()->id)->where('status','next_follow_up')->count();
+        $data['customer'] = Contact::where('user_id',Auth::user()->id)->where('status','customer')->count();
+        return ResponseHelper::responseJson("Success",200,"Contact information",$data);
     }
 
     public function searchContact(Request $request){

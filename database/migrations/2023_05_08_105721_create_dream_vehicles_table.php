@@ -27,7 +27,7 @@ class CreateDreamVehiclesTable extends Migration
             $table->string('leasing')->nullable();
             $table->integer('dp')->nullable();
             $table->string('repayment')->nullable();
-            $table->string('installment')->nulllable();
+            $table->string('installment')->nullable();
             $table->string('number_of_month')->nullable();
             $table->enum('ownership',['pribadi','perusahaan'])->nullable();
             $table->string('notes');

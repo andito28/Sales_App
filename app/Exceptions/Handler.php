@@ -2,11 +2,28 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Helpers\ResponseHelper;
+use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpFoundation\Response;
+use Laravel\Passport\Exceptions\OAuthServerException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
+
+    public function render($request, Throwable $exception)
+{
+    if ($exception instanceof AuthenticationException && $exception->guards() === ['api']) {
+        return ResponseHelper::responseJson("Failed",401,"Unauthorized",null);
+    }
+
+    if ($exception instanceof OAuthServerException && $exception->getCode() === 9) {
+        return ResponseHelper::responseJson("Failed",401,"Unauthorized",null);
+    }
+
+    return parent::render($request, $exception);
+}
     /**
      * A list of the exception types that are not reported.
      *

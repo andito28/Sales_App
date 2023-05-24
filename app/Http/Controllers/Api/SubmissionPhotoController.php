@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use Illuminate\Http\Request;
+use App\Helpers\ResponseHelper;
+use App\Models\SubmissionPhoto;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+
+class SubmissionPhotoController extends Controller
+{
+    public function createSubmissionPhoto(Request $request){
+        $data_validate = $request->all();
+        $validator = Validator::make($data_validate, [
+            'contact' => 'required',
+            'photo' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
+        }
+        $files = $request->file('photo');
+        if ($files) {
+            $file_name = date('YmdHis').str_replace('', '', $files->getClientOriginalName());
+            Storage::disk('local')->putFileAs('public/photo', $files, $file_name);
+        }
+        $data = new SubmissionPhoto();
+        $data->contact_id = $request->contact;
+        $data->photo = $file_name;
+        $data->save();
+        return ResponseHelper::responseJson("Success",200,"Successful insert data",$data);
+    }
+
+    public function destroySubmissionPhoto($id){
+        $data = SubmissionPhoto::findOrFail($id);
+        Storage::delete('/public/photo/'. $data->photo);
+        $data->delete();
+        return ResponseHelper::responseJson("Success",200,"Successful delete data",$data);
+    }
+}

@@ -9,6 +9,7 @@ use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Collection;
 
 class ReminderController extends Controller
 {
@@ -58,25 +59,31 @@ class ReminderController extends Controller
     public function getUpcomingReminder(){
         $date = Carbon::now()->toDateString();
         $time = Carbon::now()->toTimeString();
+        $datetime_now = Carbon::parse($date)->setTimeFromTimeString($time);
 
         $reminder = Reminder::where('user_id',Auth::user()->id)
                 ->whereDate('reminder_date','>=', $date)
-                ->latest('reminder_date')
-                ->first();
+                ->orderBy('reminder_date','asc')
+                ->orderBy('time','asc')
+                ->get();
 
-        $data = null;
-        if($reminder){
-            if($time < $reminder->time){
-                $data['id'] = $reminder->id;
-                $data['contact'] = $reminder->Contact->name;
-                $data['title'] = $reminder->title;
-                $data['reminder_date'] = $reminder->reminder_date;
-                $data['time'] = $reminder->time;
-                $data['notes'] = $reminder->notes;
-                $data['frequency'] = $reminder->frequency;
+        $data = [];
+        foreach($reminder as $value){
+            $datetime_db = Carbon::parse($value->reminder_date)->setTimeFromTimeString($value->time);
+            if($datetime_now < $datetime_db){
+                $data[] = [
+                    'id' => $value->id,
+                    'contact' => $value->Contact->name,
+                    'title' => $value->title,
+                    'reminder_date' => $value->reminder_date,
+                    'time' => $value->time,
+                    'notes' => $value->notes,
+                    'frequency' => $value->frequency
+                ];
             }
         }
-        return ResponseHelper::responseJson("Success",200,"Upcoming Reminder",$data);
+        $limitedData = Collection::make($data)->take(3);
+        return ResponseHelper::responseJson("Success",200,"Upcoming Reminder",$limitedData);
     }
 
     public function createReminder(Request $request){

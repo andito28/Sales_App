@@ -9,6 +9,7 @@ use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Collection;
 
 class AgendaController extends Controller
 {
@@ -44,24 +45,31 @@ class AgendaController extends Controller
     public function getUpcomingAgenda(){
         $date = Carbon::now()->toDateString();
         $time = Carbon::now()->toTimeString();
+        $datetime_now = Carbon::parse($date)->setTimeFromTimeString($time);
 
         $agenda = Agenda::where('user_id',Auth::user()->id)
                 ->whereDate('date','>=', $date)
-                ->latest('date')
-                ->first();
-        $data = null;
-        if($agenda){
-            if($time < $agenda->time){
-                $data['id'] = $agenda->id;
-                $data['contact'] = $agenda->Contact->name;
-                $data['status'] = $agenda->status;
-                $data['title'] = $agenda->title;
-                $data['date'] = $agenda->date;
-                $data['time'] = $agenda->time;
-                $data['location'] = $agenda->location;
+                ->orderBy('date','asc')
+                ->orderBy('time','asc')
+                ->get();
+
+        $data = [];
+        foreach($agenda as $value){
+            $datetime_db = Carbon::parse($value->date)->setTimeFromTimeString($value->time);
+            if($datetime_now < $datetime_db){
+                $data[] = [
+                    'id' => $value->id,
+                    'contact' => $value->Contact->name,
+                    'title' => $value->title,
+                    'status' => $value->status,
+                    'date' => $value->date,
+                    'time' => $value->time,
+                    'location' => $value->location
+                ];
             }
         }
-        return ResponseHelper::responseJson("Success",200,"Upcoming Agenda",$data);
+        $limitedData = Collection::make($data)->take(3);
+        return ResponseHelper::responseJson("Success",200,"Upcoming Agenda",$limitedData);
     }
 
     public function createAgenda(Request $request){

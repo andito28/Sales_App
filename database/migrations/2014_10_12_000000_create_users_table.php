@@ -23,6 +23,11 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->text('firebase_token');
             $table->enum('role',['sales','admin']);
+            $table->date('date_of_birth')->nullable();
+            $table->string('workplace')->nullable();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('province')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

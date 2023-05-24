@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\VehicleName;
 use App\Models\VehicleType;
+use App\Models\DreamVehicle;
 use App\Models\VehicleBrand;
 use App\Models\VehicleColor;
 use Illuminate\Http\Request;
@@ -207,4 +208,107 @@ class VehicleController extends Controller
     }
 
 
+    //CRUD Dream Vehicle
+    public function createDreamVehicle(Request $request){
+        $data_validate = $request->all();
+        $validator = Validator::make($data_validate, [
+            'contact' => 'required',
+            'item_condition' => 'required',
+            'vehicle_name' => 'required',
+            'vehicle_brand' => 'required',
+            'vehicle_type' => 'required',
+            'vehicle_color' => 'required',
+            'dp' => 'required',
+            'notes' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
+        }
+
+        $dream_vehicle = new DreamVehicle();
+        $dream_vehicle->status = $request->status;
+        $dream_vehicle->contact_id = $request->contact;
+        $dream_vehicle->item_condition = $request->item_condition;
+        $dream_vehicle->vehicle_brand_id = $request->vehicle_brand;
+        $dream_vehicle->vehicle_name_id = $request->vehicle_name;
+        $dream_vehicle->vehicle_type_id = $request->vehicle_type;
+        $dream_vehicle->vehicle_color_id = $request->vehicle_color;
+        $dream_vehicle->transmission = $request->transmission;
+        $dream_vehicle->payment = $request->payment;
+        $dream_vehicle->leasing = $request->leasing;
+        $dream_vehicle->dp = $request->dp;
+        $dream_vehicle->repayment = $request->repayment;
+        $dream_vehicle->installment = $request->installment;
+        $dream_vehicle->number_of_month = $request->number_of_month;
+        $dream_vehicle->ownership = $request->ownership;
+        $dream_vehicle->notes = $request->notes;
+        $dream_vehicle->sold_status = $request->sold_status;
+        $dream_vehicle->save();
+        return ResponseHelper::responseJson("Success",200,"Successful insert data",$dream_vehicle);
+    }
+
+    public function updateDreamVehicle(Request $request,$id){
+        $data_validate = $request->all();
+        $validator = Validator::make($data_validate, [
+            'contact' => 'required',
+            'item_condition' => 'required',
+            'vehicle_name' => 'required',
+            'vehicle_brand' => 'required',
+            'vehicle_type' => 'required',
+            'vehicle_color' => 'required',
+            'ownership' => 'required',
+            'dp' => 'required',
+            'notes' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
+        }
+
+        $dream_vehicle = DreamVehicle::findOrFail($id);
+        $dream_vehicle->id = $request->id;
+        $dream_vehicle->status = $request->status;
+        $dream_vehicle->contact_id = $request->contact;
+        $dream_vehicle->item_condition = $request->item_condition;
+        $dream_vehicle->vehicle_brand_id = $request->vehicle_brand;
+        $dream_vehicle->vehicle_name_id = $request->vehicle_name;
+        $dream_vehicle->vehicle_type_id = $request->vehicle_type;
+        $dream_vehicle->vehicle_color_id = $request->vehicle_color;
+        $dream_vehicle->transmission = $request->transmission;
+        $dream_vehicle->payment = $request->payment;
+        $dream_vehicle->leasing = $request->leasing;
+        $dream_vehicle->dp = $request->dp;
+        $dream_vehicle->repayment = $request->repayment;
+        $dream_vehicle->installment = $request->installment;
+        $dream_vehicle->number_of_month = $request->number_of_month;
+        $dream_vehicle->ownership = $request->ownership;
+        $dream_vehicle->notes = $request->notes;
+        $dream_vehicle->sold_status = $request->sold_status;
+        $dream_vehicle->save();
+        return ResponseHelper::responseJson("Success",200,"Successful update data",$dream_vehicle);
+    }
+
+    public function detailDreamVehicle($id){
+        $dream_vehicle = DreamVehicle::findOrFail($id);
+        $data['id'] = $dream_vehicle->id;
+        $data['contact']= $dream_vehicle->Contact->name;
+        $data['status'] = $dream_vehicle->status;
+        $data['item_condition'] = $dream_vehicle->item_condition;
+        $data['vehicle_brand']= $dream_vehicle->vehicle_brand;
+        $data['vehicle_name'] = $dream_vehicle->vehicle_name;
+        $data['vehicle_type'] = $dream_vehicle->vehicle_type;
+        $data['vehicle_color'] = $dream_vehicle->vehicle_color;
+        $data['transmission'] = $dream_vehicle->transmission;
+        $data['payment'] = $dream_vehicle->payment;
+        $data['leasing'] = $dream_vehicle->leasing;
+        $data['dp']= $dream_vehicle->dp;
+        $data['repayment'] = $dream_vehicle->repayment;
+        $data['installment'] = $dream_vehicle->installment;
+        $data['number_of_month'] = $dream_vehicle->number_of_month;
+        $data['ownership'] = $dream_vehicle->ownership;
+        $data['notes'] = $dream_vehicle->notes;
+        $data['sold_status'] = $dream_vehicle->sold_status;
+        return ResponseHelper::responseJson("Success",200,"Detail Dream Vehicle",$data);
+    }
 }

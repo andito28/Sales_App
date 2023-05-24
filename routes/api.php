@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\AgendaController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReminderController;
+use App\Http\Controllers\Api\SubmissionPhotoController;
 
 //Auth
 Route::post('v1/login', [AuthController::class, 'login']);
@@ -37,6 +38,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('v1/create-contact',[ContactController::class,'createContact']);
     Route::put('v1/update-contact/{id}',[ContactController::class,'updateContact']);
     Route::get('v1/get-status-contact',[ContactController::class,'getStatusContact']);
+    Route::get('v1/get-information-contact',[ContactController::class,'getInformationContact']);
     Route::get('v1/search-contact',[ContactController::class,'SearchContact']);
 
     //vehicle name
@@ -63,6 +65,11 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::put('v1/update-vehicle-color/{id}',[VehicleController::class,'updateVehicleColor']);
     Route::delete('v1/delete-vehicle-color/{id}',[VehicleController::class,'deleteVehicleColor']);
 
+    //Dream Vehicle
+    Route::post('v1/create-dream-vehicle',[VehicleController::class,'createDreamVehicle']);
+    Route::put('v1/update-dream-vehicle/{id}',[VehicleController::class,'updateDreamVehicle']);
+    Route::get('v1/detail-dream-vehicle/{id}',[VehicleController::class,'detailDreamVehicle']);
+
     //ToDo
     Route::get('v1/get-todo',[ToDoController::class,'getAllToDo']);
     Route::post('v1/create-todo',[ToDoController::class,'createToDo']);
@@ -85,4 +92,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::put('v1/update-reminder/{id}',[ReminderController::class,'updateReminder']);
     Route::delete('v1/delete-reminder/{id}',[ReminderController::class,'destroyReminder']);
 
+    //Submission photo
+    Route::post('v1/create-submission-photo',[SubmissionPhotoController::class,'createSubmissionPhoto']);
+    Route::delete('v1/delete-submission-photo/{id}',[SubmissionPhotoController::class,'destroySubmissionPhoto']);
 });
