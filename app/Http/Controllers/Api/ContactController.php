@@ -140,6 +140,7 @@ class ContactController extends Controller
             foreach($contact->Phone as $key => $value){
                 $phone = Phone::findOrFail($value->id);
                 $phone->phone_number = $request->phone[$key];
+                $phone->type = $request->type[$key];
                 $phone->save();
             }
             $data[] = $contact;
