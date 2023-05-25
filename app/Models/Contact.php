@@ -26,7 +26,8 @@ class Contact extends Model
         'partner_job',
         'number_of_children',
         'contact_record',
-        'supporting_notes'
+        'supporting_notes',
+        'save_date'
     ];
 
     public function User(){

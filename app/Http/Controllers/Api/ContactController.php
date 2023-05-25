@@ -29,26 +29,32 @@ class ContactController extends Controller
     }
 
 
-    public function getAllContact(){
+    public function getAllContact(Request $request){
         $data = [];
-        $contact = Contact::all();
+        $perpage = $request->input('page', 10);
+        $contact = Contact::paginate($perpage);
         foreach($contact as $value){
 
             $phone = [];
             $email = [];
             foreach($value->Phone as $item){
-                $phone[] = $item->phone_number;
+                $phone[] = [
+                            'number' => $item->phone_number,
+                            'type' => $item->type
+                            ];
             }
             foreach($value->Email as $item){
                 $email[] = $item->email;
             }
+
+            $photo = $value->photo != null ? url('storage/contact-photo/'.$value->photo) : null ;
 
             $data[] = [
                 'id' => $value->id,
                 'data_origin' => $value->DataOrigin->information,
                 'name' => $value->name,
                 'status' => $value->status,
-                'photo' => url('storage/contact-photo/'.$value->photo),
+                'photo' => $photo,
                 'phone_number' => $phone,
                 'email' => $email,
                 'city' => $value->city,
@@ -63,7 +69,8 @@ class ContactController extends Controller
                 'partner_job' => $value->partner_job,
                 'number_of_children' => $value->number_of_children,
                 'contact_record' => $value->contact_record,
-                'supporting_notes' => $value->supporting_notes
+                'supporting_notes' => $value->supporting_notes,
+                'save_date' => $value->save_date
             ];
         }
         return ResponseHelper::responseJson("Success",200,"Data All Contact",$data);
@@ -74,7 +81,8 @@ class ContactController extends Controller
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
             'name' => 'required',
-            'data_origin' => 'required'
+            'data_origin' => 'required',
+            'save_date' => 'required'
         ]);
         if ($validator->fails()) {
             return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
@@ -87,12 +95,14 @@ class ContactController extends Controller
             $contact->data_origin_id = $request->data_origin;
             $contact->status = $request->status;
             $contact->name = $request->name;
+            $contact->save_date = $request->save_date;
             $contact->save();
 
-            foreach($request->phone as $value){
+            foreach($request->phone as $key => $value){
                 $phone = new Phone();
                 $phone->contact_id = $contact->id;
                 $phone->phone_number = $value;
+                $phone->type = $request['type'][$key];
                 $phone->save();
             }
 

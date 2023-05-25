@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\RegionController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReminderController;
+use App\Http\Controllers\Api\AffiliateController;
 use App\Http\Controllers\Api\SubmissionPhotoController;
 
 //Auth
@@ -100,4 +101,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     //Submission photo
     Route::post('v1/create-submission-photo',[SubmissionPhotoController::class,'createSubmissionPhoto']);
     Route::delete('v1/delete-submission-photo/{id}',[SubmissionPhotoController::class,'destroySubmissionPhoto']);
+
+    //Affiliate
+    Route::get('v1/get-affiliation-available',[AffiliateController::class,'getAffiliationAvailable']);
+    Route::get('v1/get-affiliation-by-user',[AffiliateController::class,'getAffiliationByUser']);
 });

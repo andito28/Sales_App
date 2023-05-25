@@ -33,6 +33,7 @@ class CreateContactsTable extends Migration
             $table->string('number_of_children')->nullable();
             $table->string('contact_record')->nullable();
             $table->string('supporting_notes')->nullable();
+            $table->date('save_date');
             $table->timestamps();
         });
     }

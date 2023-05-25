@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use App\Mail\MailClass;
 use App\Mail\SendEmail;
+use App\Models\Affiliate;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PasswordReset;
 use Illuminate\Support\Carbon;
 use Laravel\Passport\Passport;
 use App\Helpers\ResponseHelper;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -49,7 +51,6 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
-
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
