@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ToDoController;
 use App\Http\Controllers\Api\AgendaController;
+use App\Http\Controllers\Api\RegionController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReminderController;
@@ -17,6 +18,10 @@ Route::post('v1/forget-password', [AuthController::class, 'forgetPassword']);
 
 //Check Reminder
 Route::get('v1/check-reminder',[ReminderController::class,'checkReminder']);
+
+//Get region
+Route::get('v1/get-provinces',[RegionController::class,'getProvinces']);
+Route::get('v1/get-regencies',[RegionController::class,'getRegencies']);
 
 
 Route::group(['middleware' => ['auth:api']], function () {

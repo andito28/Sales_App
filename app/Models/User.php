@@ -22,7 +22,12 @@ class User extends Authenticatable
         'phone',
         'password',
         'firebase_token',
-        'role'
+        'role',
+        'date_of_birth',
+        'workplace',
+        'address',
+        'city',
+        'province'
     ];
 
     /**
