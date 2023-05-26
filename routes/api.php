@@ -103,6 +103,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::delete('v1/delete-submission-photo/{id}',[SubmissionPhotoController::class,'destroySubmissionPhoto']);
 
     //Affiliate
-    Route::get('v1/get-affiliation-available',[AffiliateController::class,'getAffiliationAvailable']);
+    Route::get('v1/check-affiliation-available',[AffiliateController::class,'checkAffiliationAvailable']);
     Route::get('v1/get-affiliation-by-user',[AffiliateController::class,'getAffiliationByUser']);
 });

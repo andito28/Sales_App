@@ -10,22 +10,23 @@ use Illuminate\Support\Facades\Auth;
 
 class AffiliateController extends Controller
 {
-    public function getAffiliationAvailable(Request $request){
+    public function checkAffiliationAvailable(Request $request){
         $affiliate = Affiliate::where('affiliate_code',$request->code)->first();
-        $result = $affiliate != null ? true : false;
+        $message = $affiliate != null ? true : false;
         if($affiliate){
-            $data['status'] = $result;
-            $data['affiliate_code'] = $affiliate->affiliate_code;
+            $status = 'Success';
+            $code = 200;
         }else{
-            $data['status'] = $result;
-            $data['affiliate_code'] = null;
+            $status = 'Failed';
+            $code = 404;
         }
-        return ResponseHelper::responseJson("Success",200,"Affilate Code",$data);
+        return ResponseHelper::responseJson($status,$code,$message,null);
     }
 
     public function getAffiliationByUser(){
         $affiliate = Affiliate::where('user_id',Auth::user()->id)->first();
-        $data['affiliate_code'] = $affiliate->affiliate_code;
+        $code =  $affiliate != null ? $affiliate->affiliate_code : null;
+        $data['affiliate_code'] = $code;
         return ResponseHelper::responseJson("Success",200,"Affilate Code",$data);
     }
 }
