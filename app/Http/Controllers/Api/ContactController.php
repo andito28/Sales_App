@@ -31,8 +31,9 @@ class ContactController extends Controller
 
     public function getAllContact(Request $request){
         $data = [];
-        $perpage = $request->input('page', 10);
-        $contact = Contact::paginate($perpage);
+        $page = $request->query('page', 1);
+        $limit = $request->query('limit', 10);
+        $contact = Contact::paginate($limit, ['*'], 'page', $page);
         foreach($contact as $value){
 
             $phone = [];
