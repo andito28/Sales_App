@@ -83,9 +83,10 @@ class ContactController extends Controller
                 $email[] = $item->email;
             }
             $photo = $value->photo != null ? url('storage/contact-photo/'.$value->photo) : null ;
+            $data_origin = $value->data_origin_id != null ? $value->DataOrigin->information : null ;
             $data[] = [
                 'id' => $value->id,
-                'data_origin' => $value->DataOrigin->information,
+                'data_origin' => $data_origin,
                 'name' => $value->name,
                 'gender' => $value->gender,
                 'status' => $value->status,
