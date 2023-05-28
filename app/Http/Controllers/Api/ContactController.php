@@ -116,6 +116,7 @@ class ContactController extends Controller
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
             'name' => 'required',
+            'status' => 'required',
             'save_date' => 'required'
         ]);
         if ($validator->fails()) {
