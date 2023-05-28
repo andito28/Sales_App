@@ -13,6 +13,7 @@ class Contact extends Model
         'user_id',
         'data_origin_id',
         'name',
+        'gender',
         'photo',
         'city',
         'address',

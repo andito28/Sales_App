@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use App\Models\Email;
 use App\Models\Phone;
 use App\Models\Contact;
@@ -11,6 +12,7 @@ use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
@@ -33,9 +35,42 @@ class ContactController extends Controller
         $data = [];
         $page = $request->query('page', 1);
         $limit = $request->query('limit', 10);
-        $contact = Contact::paginate($limit, ['*'], 'page', $page);
+        if( $request->filter == true){
+            $query = Contact::query();
+            if ($request->has('city') && $request->city != null) {
+                $query->where('city',$request->city);
+            }
+            if ($request->has('status_contact') && $request->status_contact != null) {
+                $query->where('status',$request->status_contact);
+            }
+            if ($request->has('age')&& $request->age != null) {
+                $age = $request->age;
+                $date_now = Carbon::now();
+                $date_of_birth = $date_now->subYears($age)->toDateString();
+                $carbonDate = Carbon::parse($date_of_birth);
+                $month = $carbonDate->month;
+                $query->whereYear('date_of_birth',$date_of_birth)
+                    ->whereMonth('date_of_birth',$month);
+            }
+            // if ($request->has('purchase_date_range') && $request->purchase_date_range != null) {
+            //     $date_range = explode(',',$request->purchase_date_range);
+            //     $startDate = Carbon::parse($date_range[0]);
+            //     $endDate = Carbon::parse($date_range[1]);
+            //     $query->whereHas('dream_vehicles', function ($q) use ($startDate, $endDate) {
+            //         $q->whereBetween('purchase_date', [$startDate, $endDate]);
+            //     })->get();
+            // }
+            if ($request->has('type_car_sold') && $request->type_car_sold != null) {
+                $car_type = $request->type_car_sold;
+                $query->whereHas('DreamVehicle', function ($q) use ($car_type) {
+                    $q->where('vehicle_type_id',$car_type)->where('status','bought');
+                })->get();
+            }
+            $contact =  $query->paginate($limit, ['*'], 'page', $page);
+        }else{
+            $contact = Contact::paginate($limit, ['*'], 'page', $page);
+        }
         foreach($contact as $value){
-
             $phone = [];
             $email = [];
             foreach($value->Phone as $item){
@@ -47,13 +82,12 @@ class ContactController extends Controller
             foreach($value->Email as $item){
                 $email[] = $item->email;
             }
-
             $photo = $value->photo != null ? url('storage/contact-photo/'.$value->photo) : null ;
-
             $data[] = [
                 'id' => $value->id,
                 'data_origin' => $value->DataOrigin->information,
                 'name' => $value->name,
+                'gender' => $value->gender,
                 'status' => $value->status,
                 'photo' => $photo,
                 'phone_number' => $phone,
@@ -82,7 +116,6 @@ class ContactController extends Controller
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
             'name' => 'required',
-            'data_origin' => 'required',
             'save_date' => 'required'
         ]);
         if ($validator->fails()) {
@@ -93,12 +126,10 @@ class ContactController extends Controller
         DB::transaction(function() use($request,&$data){
             $contact = new Contact();
             $contact->user_id = Auth::user()->id;
-            $contact->data_origin_id = $request->data_origin;
             $contact->status = $request->status;
             $contact->name = $request->name;
             $contact->save_date = $request->save_date;
             $contact->save();
-
             foreach($request->phone as $key => $value){
                 $phone = new Phone();
                 $phone->contact_id = $contact->id;
@@ -106,17 +137,14 @@ class ContactController extends Controller
                 $phone->type = $request['type'][$key];
                 $phone->save();
             }
-
             foreach($request->email as $value){
                 $email = new Email();
                 $email->contact_id = $contact->id;
                 $email->email = $value;
                 $email->save();
             }
-
             $data [] = [
                 'name' => $contact->name,
-                'data_origin' => $contact->DataOrigin->information,
                 'phone_number' => $request->phone,
                 'email' => $request->email,
             ];
@@ -128,8 +156,7 @@ class ContactController extends Controller
     public function updateContact(Request $request,$id){
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
-            'name' => 'required',
-            'data_origin' => 'required'
+            'name' => 'required'
         ]);
         if ($validator->fails()) {
             return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
@@ -138,12 +165,46 @@ class ContactController extends Controller
         $data = [];
         DB::transaction(function() use($request,&$data,&$id){
             $contact = Contact::findOrFail($id);
+            $files = $request->file('photo');
+            if ($files) {
+                if($contact->photo != null){
+                    Storage::delete('/public/contact-photo/'. $contact->photo);
+                }
+                $file_name = date('YmdHis').str_replace('', '', $files->getClientOriginalName());
+                Storage::disk('local')->putFileAs('public/contact-photo', $files, $file_name);
+            }else{
+                $file_name = $contact->photo;
+            }
             foreach($contact->Phone as $key => $value){
                 $phone = Phone::findOrFail($value->id);
                 $phone->phone_number = $request->phone[$key];
                 $phone->type = $request->type[$key];
                 $phone->save();
             }
+            foreach($contact->Email as $key => $value){
+                $email = Email::findOrFail($value->id);
+                $email->email = $request->email[$key];
+                $email->save();
+            }
+            $contact->data_origin_id = $request->data_origin;
+            $contact->name = $request->name;
+            $contact->gender = $request->gender;
+            $contact->photo = $file_name;
+            $contact->status = $request->status;
+            $contact->city = $request->city;
+            $contact->address = $request->address;
+            $contact->subdistrict = $request->subdistrict;
+            $contact->village = $request->village;
+            $contact->job = $request->job;
+            $contact->date_of_birth = $request->date_of_birth;
+            $contact->hobby = $request->hobby;
+            $contact->relationship_status = $request->relationship_status;
+            $contact->partner_name = $request->partner_name;
+            $contact->partner_job = $request->partner_job;
+            $contact->number_of_children = $request->number_of_children;
+            $contact->contact_record = $request->contact_record;
+            $contact->supporting_notes = $request->supporting_notes;
+            $contact->save();
             $data[] = $contact;
             return compact('data');
         });

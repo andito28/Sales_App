@@ -22,6 +22,7 @@ class CreateDreamVehiclesTable extends Migration
             $table->foreignId('vehicle_name_id')->constrained('vehicle_names')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('vehicle_type_id')->constrained('vehicle_types')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('vehicle_color_id')->constrained('vehicle_colors')->onDelete('cascade')->onUpdate('cascade');
+            $table->date('purchase_date')->nullable();
             $table->enum('transmission',['manual','automatic']);
             $table->enum('payment',['cash','kredit']);
             $table->string('leasing')->nullable();

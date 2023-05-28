@@ -65,17 +65,31 @@ class AuthController extends Controller
     public function getProfile(){
         $user = Auth::user();
         $data['name'] = $user->name;
+        $data['date_of_birth'] = $user->date_of_birth;
         $data['email'] = $user->email;
         if($user->photo == null){
             $data['photo'] = null;
         }else{
             $data['photo'] = url('/storage/photo/'.$user->photo);
         }
+        $data['phone'] = $user->phone;
+        $data['province'] = $user->province;
+        $data['city'] = $user->city;
+        $data['address'] = $user->address;
+        $data['workplace'] = $user->workplace;
         return ResponseHelper::responseJson("Success",200,"Profile User",$data);
     }
 
     public function updateProfile(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'phone' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
+        }
         $data = Auth::user();
         $files = $request->file('photo');
         if ($files) {
@@ -90,6 +104,11 @@ class AuthController extends Controller
         $data->name = $request->name;
         $data->phone = $request->phone;
         $data->photo = $file_name;
+        $data->date_of_birth = $request->date_of_birth;
+        $data->workplace = $request->workplace;
+        $data->address = $request->address;
+        $data->city = $request->city;
+        $data->province = $request->province;
         $data->save();
         return ResponseHelper::responseJson("Success",200,"Successful updated data",$data);
     }

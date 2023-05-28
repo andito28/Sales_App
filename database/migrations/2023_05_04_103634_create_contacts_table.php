@@ -16,8 +16,9 @@ class CreateContactsTable extends Migration
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('data_origin_id')->constrained('data_origins')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('data_origin_id')->constrained('data_origins')->onDelete('cascade')->onUpdate('cascade')->nullable();
             $table->string('name');
+            $table->enum('gender',['laki-laki','perempuan']);
             $table->enum('status',['hot','medium','low','follow_up','next_follow_up','customer']);
             $table->string('photo')->nullable();
             $table->string('city')->nullable();

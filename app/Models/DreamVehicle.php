@@ -19,6 +19,7 @@ class DreamVehicle extends Model
         'vehicle_color_id',
         'transmission',
         'payment',
+        'purchase_date',
         'leasing',
         'dp',
         'repayment',
