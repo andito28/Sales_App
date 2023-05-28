@@ -43,6 +43,12 @@ class ContactController extends Controller
             if ($request->has('status_contact') && $request->status_contact != null) {
                 $query->where('status',$request->status_contact);
             }
+            if ($request->has('gender') && $request->gender != null) {
+                $query->where('gender',$request->gender);
+            }
+            if ($request->has('data_origin') && $request->data_origin != null) {
+                $query->where('data_origin_id',$request->data_origin);
+            }
             if ($request->has('age')&& $request->age != null) {
                 $age = $request->age;
                 $date_now = Carbon::now();
@@ -52,18 +58,48 @@ class ContactController extends Controller
                 $query->whereYear('date_of_birth',$date_of_birth)
                     ->whereMonth('date_of_birth',$month);
             }
-            // if ($request->has('purchase_date_range') && $request->purchase_date_range != null) {
-            //     $date_range = explode(',',$request->purchase_date_range);
-            //     $startDate = Carbon::parse($date_range[0]);
-            //     $endDate = Carbon::parse($date_range[1]);
-            //     $query->whereHas('dream_vehicles', function ($q) use ($startDate, $endDate) {
-            //         $q->whereBetween('purchase_date', [$startDate, $endDate]);
-            //     })->get();
-            // }
+            if ($request->has('purchase_date_range') && $request->purchase_date_range != null) {
+                $date_range = explode(',',$request->purchase_date_range);
+                $startDate = Carbon::parse($date_range[0]);
+                $endDate = Carbon::parse($date_range[1]);
+                $query->whereHas('DreamVehicle', function ($q) use ($startDate, $endDate) {
+                    $q->whereBetween('purchase_date', [$startDate, $endDate]);
+                })->get();
+            }
+            if ($request->has('transmission') && $request->transmission != null) {
+                $transmission = $request->transmission;
+                $query->whereHas('DreamVehicle', function ($q) use ($transmission) {
+                    $q->where('transmission',$transmission);
+                })->get();
+            }
             if ($request->has('type_car_sold') && $request->type_car_sold != null) {
                 $car_type = $request->type_car_sold;
                 $query->whereHas('DreamVehicle', function ($q) use ($car_type) {
-                    $q->where('vehicle_type_id',$car_type)->where('status','bought');
+                    $q->where('vehicle_type_id',$car_type)->where('sold_status','true');
+                })->get();
+            }
+            if ($request->has('color_car_sold') && $request->color_car_sold != null) {
+                $car_color = $request->color_car_sold;
+                $query->whereHas('DreamVehicle', function ($q) use ($car_color) {
+                    $q->where('vehicle_color_id',$car_color)->where('sold_status','true');
+                })->get();
+            }
+            if ($request->has('brand_car_sold') && $request->brand_car_sold != null) {
+                $car_brand = $request->brand_car_sold;
+                $query->whereHas('DreamVehicle', function ($q) use ($car_brand) {
+                    $q->where('vehicle_brand_id',$car_brand)->where('sold_status','true');
+                })->get();
+            }
+            if ($request->has('payment') && $request->payment != null) {
+                $payment = $request->payment;
+                $query->whereHas('DreamVehicle', function ($q) use ($payment) {
+                    $q->where('payment',$payment);
+                })->get();
+            }
+            if ($request->has('ownership') && $request->ownership != null) {
+                $ownership = $request->ownership;
+                $query->whereHas('DreamVehicle', function ($q) use ($ownership) {
+                    $q->where('ownership',$ownership);
                 })->get();
             }
             $contact =  $query->paginate($limit, ['*'], 'page', $page);
@@ -263,5 +299,12 @@ class ContactController extends Controller
             ];
         }
         return ResponseHelper::responseJson("Success",200,"Successful Search Contact",$data);
+    }
+
+    public function destroyContact($id){
+        $data = Contact::findOrFail($id);
+        Storage::delete('/public/contact-photo/'. $data->photo);
+        $data->delete();
+        return ResponseHelper::responseJson("Success",200,"Successful delete data",$data);
     }
 }
