@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReminderController;
 use App\Http\Controllers\Api\AffiliateController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\SubmissionPhotoController;
 
 //Auth
@@ -106,4 +107,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     //Affiliate
     Route::get('v1/check-affiliation-available',[AffiliateController::class,'checkAffiliationAvailable']);
     Route::get('v1/get-affiliation-by-user',[AffiliateController::class,'getAffiliationByUser']);
+
+    //Notification
+    Route::get('v1/get-notification',[NotificationController::class,'getNotification']);
+    Route::put('v1/update-notification/{id}',[NotificationController::class,'updateNotification']);
+    Route::delete('v1/delete-notification/{id}',[NotificationController::class,'destroyNotification']);
 });

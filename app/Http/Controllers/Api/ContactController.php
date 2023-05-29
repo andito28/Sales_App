@@ -162,10 +162,18 @@ class ContactController extends Controller
 
         $data = [];
         DB::transaction(function() use($request,&$data){
+            $files = $request->file('photo');
+            if ($files) {
+                $file_name = date('YmdHis').str_replace('', '', $files->getClientOriginalName());
+                Storage::disk('local')->putFileAs('public/contact-photo', $files, $file_name);
+            }else{
+                $file_name = null;
+            }
             $contact = new Contact();
             $contact->user_id = Auth::user()->id;
             $contact->status = $request->status;
             $contact->name = $request->name;
+            $contact->photo = $file_name;
             $contact->save_date = $request->save_date;
             $contact->save();
             foreach($request->phone as $key => $value){
