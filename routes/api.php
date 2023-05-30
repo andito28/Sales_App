@@ -42,6 +42,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     //contact
     Route::get('v1/get-contact',[ContactController::class,'getAllContact']);
+    Route::get('v1/get-contact/{id}',[ContactController::class,'getDetailContact']);
     Route::post('v1/create-contact',[ContactController::class,'createContact']);
     Route::put('v1/update-contact/{id}',[ContactController::class,'updateContact']);
     Route::get('v1/get-status-contact',[ContactController::class,'getStatusContact']);

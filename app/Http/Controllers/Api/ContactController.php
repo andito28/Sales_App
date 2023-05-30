@@ -111,12 +111,16 @@ class ContactController extends Controller
             $email = [];
             foreach($value->Phone as $item){
                 $phone[] = [
+                            'id' => $item->id,
                             'number' => $item->phone_number,
                             'type' => $item->type
                             ];
             }
             foreach($value->Email as $item){
-                $email[] = $item->email;
+                $email[] = [
+                    'id' => $item->id,
+                    'email' => $item->email
+                ];
             }
             $photo = $value->photo != null ? url('storage/contact-photo/'.$value->photo) : null ;
             $data_origin = $value->data_origin_id != null ? $value->DataOrigin->information : null ;
@@ -148,6 +152,49 @@ class ContactController extends Controller
         return ResponseHelper::responseJson("Success",200,"Data All Contact",$data);
     }
 
+    public function getDetailContact($id){
+        $contact = Contact::findOrFail($id);
+        foreach($contact->Phone as $item){
+            $phone[] = [
+                        'id' => $item->id,
+                        'number' => $item->phone_number,
+                        'type' => $item->type
+                        ];
+        }
+        foreach($contact->Email as $item){
+            $email[] = [
+                'id' => $item->id,
+                'email' => $item->email
+            ];
+        }
+        $photo = $contact->photo != null ? url('storage/contact-photo/'.$contact->photo) : null ;
+        $data_origin = $contact->data_origin_id != null ? $contact->DataOrigin->information : null ;
+        $data[] = [
+            'id' => $contact->id,
+            'data_origin' => $data_origin,
+            'name' => $contact->name,
+            'gender' => $contact->gender,
+            'status' => $contact->status,
+            'photo' => $photo,
+            'phone_number' => $phone,
+            'email' => $email,
+            'city' => $contact->city,
+            'address' => $contact->address,
+            'subdistrict' => $contact->subdistrict,
+            'village' => $contact->village,
+            'job' => $contact->job,
+            'date_of_birth' => $contact->date_of_birth,
+            'hobby' => $contact->hobby,
+            'relationship_status' => $contact->relationship_status,
+            'partner_name' => $contact->partner_name,
+            'partner_job' => $contact->partner_job,
+            'number_of_children' => $contact->number_of_children,
+            'contact_record' => $contact->contact_record,
+            'supporting_notes' => $contact->supporting_notes,
+            'save_date' => $contact->save_date
+        ];
+        return ResponseHelper::responseJson("Success",200,"Detail Contact",$data);
+    }
 
     public function createContact(Request $request){
         $data_validate = $request->all();
@@ -221,17 +268,35 @@ class ContactController extends Controller
             }else{
                 $file_name = $contact->photo;
             }
-            foreach($contact->Phone as $key => $value){
-                $phone = Phone::findOrFail($value->id);
-                $phone->phone_number = $request->phone[$key];
-                $phone->type = $request->type[$key];
-                $phone->save();
+
+            foreach($request->phone as $key =>$value){
+                $phone = Phone::where('id',$request->phone_id[$key])->first();
+                if($phone){
+                    $phone->phone_number = $value;
+                    $phone->type = $request->type[$key];
+                    $phone->save();
+                }else{
+                    $newphone = new Phone();
+                    $newphone->contact_id = $contact->id;
+                    $newphone->phone_number = $value;
+                    $newphone->type = $request->type[$key];
+                    $newphone->save();
+                }
             }
-            foreach($contact->Email as $key => $value){
-                $email = Email::findOrFail($value->id);
-                $email->email = $request->email[$key];
-                $email->save();
+
+            foreach($request->email as $key => $value){
+                $email = Email::where('id',$request->email_id[$key])->first();
+                if($email){
+                    $email->email = $request->email[$key];
+                    $email->save();
+                }else{
+                    $newemail = new Email();
+                    $newemail->contact_id = $contact->id;
+                    $newemail->email = $request->email[$key];
+                    $newemail->save();
+                }
             }
+
             $contact->data_origin_id = $request->data_origin;
             $contact->name = $request->name;
             $contact->gender = $request->gender;
