@@ -75,6 +75,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::delete('v1/delete-vehicle-color/{id}',[VehicleController::class,'deleteVehicleColor']);
 
     //Dream Vehicle
+    Route::get('v1/get-dream-vehicle-contact/{id}',[VehicleController::class,'getDreamVehicleByContact']);
     Route::post('v1/create-dream-vehicle',[VehicleController::class,'createDreamVehicle']);
     Route::put('v1/update-dream-vehicle/{id}',[VehicleController::class,'updateDreamVehicle']);
     Route::get('v1/detail-dream-vehicle/{id}',[VehicleController::class,'detailDreamVehicle']);
@@ -88,20 +89,23 @@ Route::group(['middleware' => ['auth:api']], function () {
     //Agenda
     Route::get('v1/get-agenda',[AgendaController::class,'getAllAgenda']);
     Route::get('v1/get-agenda/{id}',[AgendaController::class,'getAgenda']);
+    Route::get('v1/get-agenda-contact/{id}',[AgendaController::class,'getAgendaByContact']);
     Route::get('v1/get-upcoming-agenda',[AgendaController::class,'getUpcomingAgenda']);
     Route::post('v1/create-agenda',[AgendaController::class,'createAgenda']);
     Route::put('v1/update-agenda/{id}',[AgendaController::class,'updateAgenda']);
     Route::delete('v1/delete-agenda/{id}',[AgendaController::class,'destroyAgenda']);
 
-    //Agenda
+    //Reminder
     Route::get('v1/get-reminder',[ReminderController::class,'getAllReminder']);
     Route::get('v1/get-reminder/{id}',[ReminderController::class,'getReminder']);
+    Route::get('v1/get-reminder-contact/{id}',[ReminderController::class,'getReminderByContact']);
     Route::get('v1/get-upcoming-reminder',[ReminderController::class,'getUpcomingReminder']);
     Route::post('v1/create-reminder',[ReminderController::class,'createReminder']);
     Route::put('v1/update-reminder/{id}',[ReminderController::class,'updateReminder']);
     Route::delete('v1/delete-reminder/{id}',[ReminderController::class,'destroyReminder']);
 
     //Submission photo
+    Route::get('v1/get-submission-photo-contact/{id}',[SubmissionPhotoController::class,'getSubmissionPhotoByContact']);
     Route::post('v1/create-submission-photo',[SubmissionPhotoController::class,'createSubmissionPhoto']);
     Route::delete('v1/delete-submission-photo/{id}',[SubmissionPhotoController::class,'destroySubmissionPhoto']);
 

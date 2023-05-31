@@ -42,6 +42,24 @@ class AgendaController extends Controller
         return ResponseHelper::responseJson("Success",200,"Detail Agenda",$data);
     }
 
+    public function getAgendaByContact($id){
+        $data = [];
+        $agenda = Agenda::where('user_id',Auth::user()->id)
+                        ->where('contact_id',$id)->get();
+        foreach($agenda as $value){
+            $data[] = [
+                'id' => $value->id,
+                'contact' =>$value->Contact->name,
+                'status' =>$value->status,
+                'title' => $value->title,
+                'date' => $value->date,
+                'time' => $value->time,
+                'location' => $value->location
+            ];
+        }
+        return ResponseHelper::responseJson("Success",200,"List Agenda",$data);
+    }
+
     public function getUpcomingAgenda(){
         $date = Carbon::now()->toDateString();
         $time = Carbon::now()->toTimeString();

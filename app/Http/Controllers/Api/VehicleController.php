@@ -311,4 +311,33 @@ class VehicleController extends Controller
         $data['sold_status'] = $dream_vehicle->sold_status;
         return ResponseHelper::responseJson("Success",200,"Detail Dream Vehicle",$data);
     }
+
+    public function getDreamVehicleByContact($id){
+        $data = [];
+        $dream_vehicle = DreamVehicle::where('contact_id',$id)->get();
+
+        foreach($dream_vehicle as $value){
+            $data[] = [
+                'id' => $value->id,
+                'contact' => $value->Contact->name,
+                'status' => $value->status,
+                'item_condition' => $value->item_condition,
+                'vehicle_brand' => $value->vehicle_brand,
+                'vehicle_name' => $value->vehicle_name,
+                'vehicle_type' => $value->vehicle_type,
+                'vehicle_color' => $value->vehicle_color,
+                'transmission' => $value->transmission,
+                'payment' => $value->payment,
+                'leasing' => $value->leasing,
+                'dp'=> $value->dp,
+                'repayment' => $value->repayment,
+                'installment' => $value->installment,
+                'number_of_month' => $value->number_of_month,
+                'ownership' => $value->ownership,
+                'notes' => $value->notes,
+                'sold_status' => $value->sold_status,
+            ];
+        }
+        return ResponseHelper::responseJson("Success",200,"List Dream Vehicle",$data);
+    }
 }

@@ -56,6 +56,24 @@ class ReminderController extends Controller
         return ResponseHelper::responseJson("Success",200,"Detail Reminder",$data);
     }
 
+    public function getReminderByContact($id){
+        $data = [];
+        $reminder = Reminder::where('user_id',Auth::user()->id)
+                    ->where('contact_id',$id)->get();
+        foreach($reminder as $value){
+            $data[] = [
+                'id' => $value->id,
+                'contact' =>$value->Contact->name,
+                'title' => $value->title,
+                'reminder_date' => $value->reminder_date,
+                'time' => $value->time,
+                'notes' => $value->notes,
+                'frequency' => $value->frequency
+            ];
+        }
+        return ResponseHelper::responseJson("Success",200,"List Reminder",$data);
+    }
+
     public function getUpcomingReminder(){
         $date = Carbon::now()->toDateString();
         $time = Carbon::now()->toTimeString();

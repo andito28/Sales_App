@@ -38,4 +38,17 @@ class SubmissionPhotoController extends Controller
         $data->delete();
         return ResponseHelper::responseJson("Success",200,"Successful delete data",$data);
     }
+
+    public function getSubmissionPhotoByContact($id){
+        $data = [];
+        $submission_photo = SubmissionPhoto::where('contact_id',$id)->get();
+        foreach($submission_photo as $value){
+            $data[] = [
+                'id' => $value->id,
+                'contact' => $value->Contact->name,
+                'photo' => url('storage/photo/'.$value->photo)
+            ];
+        }
+        return ResponseHelper::responseJson("Success",200,"List Submission Photo",$data);
+    }
 }
