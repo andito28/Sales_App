@@ -31,9 +31,10 @@ class ReminderController extends Controller
         $data = [];
         $reminder = Reminder::where('user_id',Auth::user()->id)->get();
         foreach($reminder as $value){
+            $contact = !empty($value->Contact) ? $value->Contact->name : null;
             $data[] = [
                 'id' => $value->id,
-                'contact' =>$value->Contact->name,
+                'contact' =>$contact,
                 'title' => $value->title,
                 'reminder_date' => $value->reminder_date,
                 'time' => $value->time,
@@ -46,8 +47,9 @@ class ReminderController extends Controller
 
     public function getReminder($id){
         $reminder = Reminder::findOrFail($id);
+        $contact = !empty($reminder->Contact) ? $reminder->Contact->name : null;
         $data['id'] = $reminder->id;
-        $data['contact'] = $reminder->Contact->name;
+        $data['contact'] = $contact;
         $data['title'] = $reminder->title;
         $data['reminder_date'] = $reminder->reminder_date;
         $data['time'] = $reminder->time;
@@ -88,10 +90,11 @@ class ReminderController extends Controller
         $data = [];
         foreach($reminder as $value){
             $datetime_db = Carbon::parse($value->reminder_date)->setTimeFromTimeString($value->time);
+            $contact = !empty($reminder->Contact) ? $reminder->Contact->name : null;
             if($datetime_now < $datetime_db){
                 $data[] = [
                     'id' => $value->id,
-                    'contact' => $value->Contact->name,
+                    'contact' => $contact,
                     'title' => $value->title,
                     'reminder_date' => $value->reminder_date,
                     'time' => $value->time,

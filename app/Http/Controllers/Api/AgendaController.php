@@ -17,9 +17,10 @@ class AgendaController extends Controller
         $data = [];
         $agenda = Agenda::where('user_id',Auth::user()->id)->get();
         foreach($agenda as $value){
+            $contact = !empty($value->Contact) ? $value->Contact->name : null;
             $data[] = [
                 'id' => $value->id,
-                'contact' =>$value->Contact->name,
+                'contact' => $contact,
                 'status' =>$value->status,
                 'title' => $value->title,
                 'date' => $value->date,
@@ -32,8 +33,9 @@ class AgendaController extends Controller
 
     public function getAgenda($id){
         $agenda = Agenda::findOrFail($id);
+        $contact = !empty($agenda->Contact) ? $agenda->Contact->name : null;
         $data['id'] = $agenda->id;
-        $data['contact'] = $agenda->Contact->name;
+        $data['contact'] = $contact;
         $data['status'] = $agenda->status;
         $data['title'] = $agenda->title;
         $data['date'] = $agenda->date;
@@ -74,10 +76,11 @@ class AgendaController extends Controller
         $data = [];
         foreach($agenda as $value){
             $datetime_db = Carbon::parse($value->date)->setTimeFromTimeString($value->time);
+            $contact = !empty($reminder->Contact) ? $reminder->Contact->name : null;
             if($datetime_now < $datetime_db){
                 $data[] = [
                     'id' => $value->id,
-                    'contact' => $value->Contact->name,
+                    'contact' => $contact,
                     'title' => $value->title,
                     'status' => $value->status,
                     'date' => $value->date,
