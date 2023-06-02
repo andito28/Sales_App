@@ -32,9 +32,11 @@ class ReminderController extends Controller
         $reminder = Reminder::where('user_id',Auth::user()->id)->get();
         foreach($reminder as $value){
             $contact = !empty($value->Contact) ? $value->Contact->name : null;
+            $contact_id = !empty($value->Contact->id) ? $value->Contact->id : null;
             $data[] = [
                 'id' => $value->id,
                 'contact' =>$contact,
+                'contact_id' =>$contact_id,
                 'title' => $value->title,
                 'reminder_date' => $value->reminder_date,
                 'time' => $value->time,

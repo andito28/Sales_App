@@ -18,9 +18,11 @@ class AgendaController extends Controller
         $agenda = Agenda::where('user_id',Auth::user()->id)->get();
         foreach($agenda as $value){
             $contact = !empty($value->Contact) ? $value->Contact->name : null;
+            $contact_id = !empty($value->Contact->id) ? $value->Contact->id : null;
             $data[] = [
                 'id' => $value->id,
                 'contact' => $contact,
+                'contact_id' => $contact_id,
                 'status' =>$value->status,
                 'title' => $value->title,
                 'date' => $value->date,
