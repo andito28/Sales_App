@@ -90,7 +90,7 @@ class ReminderController extends Controller
         $data = [];
         foreach($reminder as $value){
             $datetime_db = Carbon::parse($value->reminder_date)->setTimeFromTimeString($value->time);
-            $contact = !empty($reminder->Contact) ? $reminder->Contact->name : null;
+            $contact = !empty($value->Contact) ? $value->Contact->name : null;
             if($datetime_now < $datetime_db){
                 $data[] = [
                     'id' => $value->id,
