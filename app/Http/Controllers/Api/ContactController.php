@@ -352,6 +352,7 @@ class ContactController extends Controller
         $contact = Contact::where('name','like',"%".$request->name."%")->get();
         $data = [];
         foreach($contact as $value){
+            $data_origin = !empty($value->DataOrigin) ? $value->DataOrigin->information : null;
             $phones = [];
             foreach($value->Phone as $phone){
                 $phones[] = [
@@ -364,7 +365,7 @@ class ContactController extends Controller
                 $emails[] = $email->email;
             }
             $data[] = [
-                'data_origin' => $value->DataOrigin->information,
+                'data_origin' => $data_origin,
                 'name' => $value->name,
                 'status' => $value->status,
                 'phone_number' => $phones,
