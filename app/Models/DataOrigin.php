@@ -13,7 +13,7 @@ class DataOrigin extends Model
         'information'
     ];
 
-    public function DataOrigin(){
-        return $this->hasMany(DataOrigin::class);
+    public function Contact(){
+        return $this->hasMany(Contact::class);
     }
 }

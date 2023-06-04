@@ -27,10 +27,26 @@ class DreamVehicle extends Model
         'number_of_month',
         'ownership',
         'notes',
-        'sold_status'
+        'sold_status',
     ];
 
     public function Contact(){
         return $this->belongsTo(Contact::class);
+    }
+
+    public function VehicleName(){
+        return $this->belongsTo(VehicleName::class);
+    }
+
+    public function VehicleBrand(){
+        return $this->belongsTo(VehicleBrand::class);
+    }
+
+    public function VehicleType(){
+        return $this->belongsTo(VehicleType::class);
+    }
+
+    public function VehicleColor(){
+        return $this->belongsTo(VehicleColor::class);
     }
 }

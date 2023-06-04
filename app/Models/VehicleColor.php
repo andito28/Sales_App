@@ -13,4 +13,8 @@ class VehicleColor extends Model
         'user_id',
         'color'
     ];
+
+    public function DreamVehicle(){
+        return $this->hasMany(DreamVehicle::class);
+    }
 }

@@ -13,4 +13,8 @@ class VehicleBrand extends Model
         'user_id',
         'brand'
     ];
+
+    public function DreamVehicle(){
+        return $this->hasMany(DreamVehicle::class);
+    }
 }

@@ -7,6 +7,11 @@ use App\Models\Email;
 use App\Models\Phone;
 use App\Models\Contact;
 use App\Models\DataOrigin;
+use App\Models\VehicleName;
+use App\Models\VehicleType;
+use App\Models\DreamVehicle;
+use App\Models\VehicleBrand;
+use App\Models\VehicleColor;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +40,7 @@ class ContactController extends Controller
         $data = [];
         $page = $request->query('page', 1);
         $limit = $request->query('limit', 10);
-        if( $request->filter == true){
+        if( $request->filter == "true"){
             $query = Contact::query();
             if ($request->has('city') && $request->city != null) {
                 $query->where('city',$request->city);
@@ -380,5 +385,194 @@ class ContactController extends Controller
         Storage::delete('/public/contact-photo/'. $data->photo);
         $data->delete();
         return ResponseHelper::responseJson("Success",200,"Successful delete data",$data);
+    }
+
+    public function getStatistik(Request $request){
+        $month = $request->month;
+        $year = $request->year;
+
+        $new_item_condition = DreamVehicle::where('item_condition','baru')
+        ->whereMonth('purchase_date',$month)
+        ->whereYear('purchase_date',$year)
+        ->where('sold_status','true')->count();
+
+        $used_item_condition = DreamVehicle::where('item_condition','bekas')
+        ->whereMonth('purchase_date',$month)
+        ->whereYear('purchase_date',$year)
+        ->where('sold_status','true')->count();
+
+        $trade_in = DreamVehicle::where('item_condition','trade in')
+        ->whereMonth('purchase_date',$month)
+        ->whereYear('purchase_date',$year)
+        ->where('sold_status','true')->count();
+
+        $total_consumen = Contact::where('user_id',Auth::user()->id)
+        ->whereMonth('created_at',$month)
+        ->whereYear('created_at',$year)
+        ->count();
+
+        $total_males = Contact::where('user_id',Auth::user()->id)
+        ->whereMonth('created_at',$month)
+        ->whereYear('created_at',$year)
+        ->where('gender','laki-laki')->count();
+
+        $total_females = Contact::where('user_id',Auth::user()->id)
+        ->whereMonth('created_at',$month)
+        ->whereYear('created_at',$year)
+        ->where('gender','perempuan')->count();
+
+        $total_cash_sales_types = DreamVehicle::where('payment','cash')
+        ->whereMonth('purchase_date',$month)
+        ->whereYear('purchase_date',$year)
+        ->where('sold_status','true')->count();
+
+        $total_kredit_sales_types = DreamVehicle::where('payment','kredit')
+        ->whereMonth('purchase_date',$month)
+        ->whereYear('purchase_date',$year)
+        ->where('sold_status','true')->count();
+
+        $start_20_30 = Carbon::now()->subYears(30+1)->endOfDay();
+        $end_20_30 = Carbon::now()->subYears(20)->endOfDay();
+        $age_20_30 = Contact::whereBetween('date_of_birth', [$start_20_30->toDateString(), $end_20_30->toDateString()])
+        ->whereMonth('save_date',$month)
+        ->whereYear('save_date',$year)->count();
+
+        $start_31_35 = Carbon::now()->subYears(35+1)->startOfDay();
+        $end_31_35 = Carbon::now()->subYears(31)->endOfDay();
+        $age_31_35 = Contact::whereBetween('date_of_birth', [$start_31_35->toDateString(), $end_31_35->toDateString()])
+        ->whereMonth('save_date',$month)
+        ->whereYear('save_date',$year)->count();
+
+        $start_36_40 = Carbon::now()->subYears(40+1)->startOfDay();
+        $end_36_40 = Carbon::now()->subYears(36)->endOfDay();
+        $age_36_40 = Contact::whereBetween('date_of_birth', [$start_36_40->toDateString(), $end_36_40->toDateString()])
+        ->whereMonth('save_date',$month)
+        ->whereYear('save_date',$year)->count();
+
+        $start_41_45 = Carbon::now()->subYears(45+1)->startOfDay();
+        $end_41_45 = Carbon::now()->subYears(41)->endOfDay();
+        $age_41_45 = Contact::whereBetween('date_of_birth', [$start_41_45->toDateString(), $end_41_45->toDateString()])
+        ->whereMonth('save_date',$month)
+        ->whereYear('save_date',$year)->count();
+
+        $start_46_50 = Carbon::now()->subYears(50+1)->startOfDay();
+        $end_46_50 = Carbon::now()->subYears(46)->endOfDay();
+        $age_46_50 = Contact::whereBetween('date_of_birth', [$start_46_50->toDateString(), $end_46_50->toDateString()])
+        ->whereMonth('save_date',$month)
+        ->whereYear('save_date',$year)->count();
+
+        $start_51 = Carbon::now()->subYears(51)->endOfDay();
+        $age_over_51 = Contact::where('date_of_birth', '<=', $start_51)
+        ->whereMonth('save_date',$month)
+        ->whereYear('save_date',$year)->count();
+
+        $vehicle_name = VehicleName::withCount([
+            'DreamVehicle' => function ($query) use ($month,$year) {
+                $query->whereMonth('purchase_date', $month)
+                ->whereYear('purchase_date',$year)
+                ->where('sold_status','true');
+            }
+        ])
+        ->having('dream_vehicle_count', '>', 0)
+        ->orderBy('dream_vehicle_count','desc')
+        ->get();
+        $data_vehicle_name = [];
+        foreach ($vehicle_name as $value) {
+            $data_vehicle_name[] = [
+                'vehicle_name' => $value->name,
+                'total' => $value->dream_vehicle_count
+            ];
+        }
+
+        $vehicle_type = VehicleType::withCount([
+            'DreamVehicle' => function ($query) use ($month,$year) {
+                $query->whereMonth('purchase_date', $month)
+                ->whereYear('purchase_date',$year)
+                ->where('sold_status','true');
+            }
+        ])
+        ->having('dream_vehicle_count', '>', 0)
+        ->orderBy('dream_vehicle_count','desc')
+        ->get();
+        $data_vehicle_type = [];
+        foreach ($vehicle_type as $value) {
+            $data_vehicle_type[] = [
+                'vehicle_type' => $value->type,
+                'total' => $value->dream_vehicle_count
+            ];
+        }
+
+        $vehicle_color = VehicleColor::withCount([
+            'DreamVehicle' => function ($query) use ($month,$year) {
+                $query->whereMonth('purchase_date', $month)
+                ->whereYear('purchase_date',$year)
+                ->where('sold_status','true');
+            }
+        ])
+        ->having('dream_vehicle_count', '>', 0)
+        ->orderBy('dream_vehicle_count','desc')
+        ->get();
+        $data_vehicle_color = [];
+        foreach ($vehicle_color as $value) {
+            $data_vehicle_color[] = [
+                'vehicle_color' => $value->color,
+                'total' => $value->dream_vehicle_count
+            ];
+        }
+
+        $data_origins = DataOrigin::withCount([
+            'Contact' => function ($query) use ($month,$year) {
+                $query->whereMonth('save_date', $month)
+                ->whereYear('save_date',$year);
+            }
+        ])
+        ->having('contact_count', '>', 0)
+        ->orderBy('contact_count','desc')
+        ->get();
+        $data_origin = [];
+        foreach ($data_origins as $value) {
+            $data_origin[] = [
+                'information' => $value->information,
+                'total' => $value->contact_count
+            ];
+        }
+
+        $item_condition = [
+            'new_item_condition' => $new_item_condition,
+            'used_item_condition' => $used_item_condition,
+            'trade_in' => $trade_in,
+        ];
+
+        $gender = [
+            'male' => $total_males,
+            'female' => $total_females,
+        ];
+
+        $sales_types = [
+            'cash' => $total_cash_sales_types,
+            'kredit' => $total_kredit_sales_types,
+        ];
+
+        $customers_age = [
+            'age_20_30' => $age_20_30,
+            'age_31_35' => $age_31_35,
+            'age_36_40' => $age_36_40,
+            'age_41_45' => $age_41_45,
+            'age_46_50' => $age_46_50,
+            'age_over_51' => $age_over_51
+        ];
+
+        $data = [
+            'item_condition' => $item_condition,
+            'total_consumen' => $total_consumen,
+            'gender' => $gender,
+            'sales_types' => $sales_types,
+            'customers_age' => $customers_age,
+            'car_sold' => $data_vehicle_name,
+            'car_type_sold' => $data_vehicle_type,
+            'car_color_sold' => $data_vehicle_color,
+            'data_origin' => $data_origin
+        ];
+        return ResponseHelper::responseJson("Success",200,"Successful get statistik",$data);
     }
 }
