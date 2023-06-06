@@ -354,7 +354,7 @@ class ContactController extends Controller
     }
 
     public function searchContact(Request $request){
-        $contact = Contact::where('name','like',"%".$request->name."%")->get();
+        $contact = Contact::where('user_id',Auth::user()->id)->where('name','like',"%".$request->name."%")->get();
         $data = [];
         foreach($contact as $value){
             $data_origin = !empty($value->DataOrigin) ? $value->DataOrigin->information : null;
@@ -369,9 +369,12 @@ class ContactController extends Controller
             foreach($value->Email as $email){
                 $emails[] = $email->email;
             }
+            $photo = $value->photo != null ? url('/storage/contact-photo/'.$value->photo) : null;
             $data[] = [
+                'id' => $value->id,
                 'data_origin' => $data_origin,
                 'name' => $value->name,
+                'photo' => $photo,
                 'status' => $value->status,
                 'phone_number' => $phones,
                 'email' => $emails
@@ -391,17 +394,26 @@ class ContactController extends Controller
         $month = $request->month;
         $year = $request->year;
 
-        $new_item_condition = DreamVehicle::where('item_condition','baru')
+        $new_item_condition = DreamVehicle::whereHas('Contact', function ($query) {
+            $query->where('user_id',Auth::user()->id);
+        })
+        ->where('item_condition','baru')
         ->whereMonth('purchase_date',$month)
         ->whereYear('purchase_date',$year)
         ->where('sold_status','true')->count();
 
-        $used_item_condition = DreamVehicle::where('item_condition','bekas')
+        $used_item_condition = DreamVehicle::whereHas('Contact', function ($query) {
+            $query->where('user_id',Auth::user()->id);
+        })
+        ->where('item_condition','bekas')
         ->whereMonth('purchase_date',$month)
         ->whereYear('purchase_date',$year)
         ->where('sold_status','true')->count();
 
-        $trade_in = DreamVehicle::where('item_condition','trade in')
+        $trade_in = DreamVehicle::whereHas('Contact', function ($query) {
+            $query->where('user_id',Auth::user()->id);
+        })
+        ->where('item_condition','trade in')
         ->whereMonth('purchase_date',$month)
         ->whereYear('purchase_date',$year)
         ->where('sold_status','true')->count();
@@ -421,7 +433,10 @@ class ContactController extends Controller
         ->whereYear('created_at',$year)
         ->where('gender','perempuan')->count();
 
-        $total_cash_sales_types = DreamVehicle::where('payment','cash')
+        $total_cash_sales_types = DreamVehicle::whereHas('Contact', function ($query) {
+            $query->where('user_id',Auth::user()->id);
+        })
+        ->where('payment','cash')
         ->whereMonth('purchase_date',$month)
         ->whereYear('purchase_date',$year)
         ->where('sold_status','true')->count();
@@ -433,36 +448,36 @@ class ContactController extends Controller
 
         $start_20_30 = Carbon::now()->subYears(30+1)->endOfDay();
         $end_20_30 = Carbon::now()->subYears(20)->endOfDay();
-        $age_20_30 = Contact::whereBetween('date_of_birth', [$start_20_30->toDateString(), $end_20_30->toDateString()])
+        $age_20_30 = Contact::where('user_id',Auth::user()->id)->whereBetween('date_of_birth', [$start_20_30->toDateString(), $end_20_30->toDateString()])
         ->whereMonth('save_date',$month)
         ->whereYear('save_date',$year)->count();
 
         $start_31_35 = Carbon::now()->subYears(35+1)->startOfDay();
         $end_31_35 = Carbon::now()->subYears(31)->endOfDay();
-        $age_31_35 = Contact::whereBetween('date_of_birth', [$start_31_35->toDateString(), $end_31_35->toDateString()])
+        $age_31_35 = Contact::where('user_id',Auth::user()->id)->whereBetween('date_of_birth', [$start_31_35->toDateString(), $end_31_35->toDateString()])
         ->whereMonth('save_date',$month)
         ->whereYear('save_date',$year)->count();
 
         $start_36_40 = Carbon::now()->subYears(40+1)->startOfDay();
         $end_36_40 = Carbon::now()->subYears(36)->endOfDay();
-        $age_36_40 = Contact::whereBetween('date_of_birth', [$start_36_40->toDateString(), $end_36_40->toDateString()])
+        $age_36_40 = Contact::where('user_id',Auth::user()->id)->whereBetween('date_of_birth', [$start_36_40->toDateString(), $end_36_40->toDateString()])
         ->whereMonth('save_date',$month)
         ->whereYear('save_date',$year)->count();
 
         $start_41_45 = Carbon::now()->subYears(45+1)->startOfDay();
         $end_41_45 = Carbon::now()->subYears(41)->endOfDay();
-        $age_41_45 = Contact::whereBetween('date_of_birth', [$start_41_45->toDateString(), $end_41_45->toDateString()])
+        $age_41_45 = Contact::where('user_id',Auth::user()->id)->whereBetween('date_of_birth', [$start_41_45->toDateString(), $end_41_45->toDateString()])
         ->whereMonth('save_date',$month)
         ->whereYear('save_date',$year)->count();
 
         $start_46_50 = Carbon::now()->subYears(50+1)->startOfDay();
         $end_46_50 = Carbon::now()->subYears(46)->endOfDay();
-        $age_46_50 = Contact::whereBetween('date_of_birth', [$start_46_50->toDateString(), $end_46_50->toDateString()])
+        $age_46_50 = Contact::where('user_id',Auth::user()->id)->whereBetween('date_of_birth', [$start_46_50->toDateString(), $end_46_50->toDateString()])
         ->whereMonth('save_date',$month)
         ->whereYear('save_date',$year)->count();
 
         $start_51 = Carbon::now()->subYears(51)->endOfDay();
-        $age_over_51 = Contact::where('date_of_birth', '<=', $start_51)
+        $age_over_51 = Contact::where('user_id',Auth::user()->id)->where('date_of_birth', '<=', $start_51)
         ->whereMonth('save_date',$month)
         ->whereYear('save_date',$year)->count();
 
@@ -470,7 +485,10 @@ class ContactController extends Controller
             'DreamVehicle' => function ($query) use ($month,$year) {
                 $query->whereMonth('purchase_date', $month)
                 ->whereYear('purchase_date',$year)
-                ->where('sold_status','true');
+                ->where('sold_status','true')
+                ->whereHas('Contact', function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                });
             }
         ])
         ->having('dream_vehicle_count', '>', 0)
@@ -488,7 +506,10 @@ class ContactController extends Controller
             'DreamVehicle' => function ($query) use ($month,$year) {
                 $query->whereMonth('purchase_date', $month)
                 ->whereYear('purchase_date',$year)
-                ->where('sold_status','true');
+                ->where('sold_status','true')
+                ->whereHas('Contact', function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                });
             }
         ])
         ->having('dream_vehicle_count', '>', 0)
@@ -506,7 +527,10 @@ class ContactController extends Controller
             'DreamVehicle' => function ($query) use ($month,$year) {
                 $query->whereMonth('purchase_date', $month)
                 ->whereYear('purchase_date',$year)
-                ->where('sold_status','true');
+                ->where('sold_status','true')
+                ->whereHas('Contact', function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                });
             }
         ])
         ->having('dream_vehicle_count', '>', 0)
@@ -522,7 +546,8 @@ class ContactController extends Controller
 
         $data_origins = DataOrigin::withCount([
             'Contact' => function ($query) use ($month,$year) {
-                $query->whereMonth('save_date', $month)
+                $query->where('user_id',Auth::user()->id)
+                ->whereMonth('save_date', $month)
                 ->whereYear('save_date',$year);
             }
         ])

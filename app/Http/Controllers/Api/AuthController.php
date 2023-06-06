@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Mail\MailClass;
 use App\Mail\SendEmail;
 use App\Models\Affiliate;
+use App\Models\Subscriber;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PasswordReset;
@@ -51,9 +52,16 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
+
+        $now = Carbon::now();
+        $futureDate = $now->addDays(14);
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
+        $subscriber = new Subscriber();
+        $subscriber->user_id = $user->id;
+        $subscriber->validity_period = $futureDate;
+        $subscriber->save();
         $data['name'] = $user->name;
         $data['email'] = $user->email;
         $data['phone'] = $user->phone;

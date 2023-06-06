@@ -13,6 +13,7 @@ class SubscriptionPackage extends Model
         'package_name',
         'normal_price',
         'prices_apply',
+        'number_of_month',
         'information'
     ];
 

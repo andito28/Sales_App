@@ -17,7 +17,8 @@ class CreateSubscriptionPackagesTable extends Migration
             $table->id();
             $table->string('package_name');
             $table->integer('normal_price');
-            $table->string('prices_apply');
+            $table->integer('prices_apply');
+            $table->integer('number_of_month');
             $table->string('information');
             $table->timestamps();
         });
