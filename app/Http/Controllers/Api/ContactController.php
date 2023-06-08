@@ -41,7 +41,7 @@ class ContactController extends Controller
         $page = $request->query('page', 1);
         $limit = $request->query('limit', 10);
         if( $request->filter == "true"){
-            $query = Contact::query();
+            $query = Contact::query()->where('user_id',Auth::user()->id);
             if ($request->has('city') && $request->city != null) {
                 $query->where('city',$request->city);
             }
@@ -61,7 +61,7 @@ class ContactController extends Controller
                 $carbonDate = Carbon::parse($date_of_birth);
                 $month = $carbonDate->month;
                 $query->whereYear('date_of_birth',$date_of_birth)
-                    ->whereMonth('date_of_birth',$month);
+                    ->whereMonth('date_of_birth','<=',$month);
             }
             if ($request->has('purchase_date_range') && $request->purchase_date_range != null) {
                 $date_range = explode(',',$request->purchase_date_range);
@@ -107,9 +107,15 @@ class ContactController extends Controller
                     $q->where('ownership',$ownership);
                 })->get();
             }
+            if ($request->has('vehicle_name') && $request->vehicle_name != null) {
+                $vehicle_name = $request->vehicle_name;
+                $query->whereHas('DreamVehicle', function ($q) use ($vehicle_name) {
+                    $q->where('vehicle_name_id',$vehicle_name);
+                })->get();
+            }
             $contact =  $query->paginate($limit, ['*'], 'page', $page);
         }else{
-            $contact = Contact::paginate($limit, ['*'], 'page', $page);
+            $contact = Contact::where('user_id',Auth::user()->id)->paginate($limit, ['*'], 'page', $page);
         }
         foreach($contact as $value){
             $phone = [];
@@ -599,5 +605,10 @@ class ContactController extends Controller
             'data_origin' => $data_origin
         ];
         return ResponseHelper::responseJson("Success",200,"Successful get statistik",$data);
+    }
+
+    public function getCityContact(){
+        $contact = Contact::select('city')->where('user_id',Auth::user()->id)->get();
+        return ResponseHelper::responseJson("Success",200,"List city contact",$contact);
     }
 }
