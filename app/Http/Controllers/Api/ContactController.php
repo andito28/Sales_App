@@ -611,4 +611,10 @@ class ContactController extends Controller
         $contact = Contact::select('city')->where('user_id',Auth::user()->id)->get();
         return ResponseHelper::responseJson("Success",200,"List city contact",$contact);
     }
+
+    public function deletePhoneNumber($id){
+        $phone = Phone::findOrFail($id);
+        $phone->delete();
+        return ResponseHelper::responseJson("Success",200,"Successful delete phone number",$phone);
+    }
 }
