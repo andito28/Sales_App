@@ -291,14 +291,30 @@ class VehicleController extends Controller
 
     public function detailDreamVehicle($id){
         $dream_vehicle = DreamVehicle::findOrFail($id);
+        $vehicle_name = [
+            'id' => $dream_vehicle->VehicleName->id,
+            'name' => $dream_vehicle->VehicleName->name
+        ];
+        $vehicle_brand = [
+            'id' => $dream_vehicle->VehicleBrand->id,
+            'brand' => $dream_vehicle->VehicleBrand->brand
+        ];
+        $vehicle_color = [
+            'id' => $dream_vehicle->VehicleColor->id,
+            'color' => $dream_vehicle->VehicleColor->color
+        ];
+        $vehicle_type = [
+            'id' => $dream_vehicle->VehicleType->id,
+            'type' => $dream_vehicle->VehicleType->type
+        ];
         $data['id'] = $dream_vehicle->id;
         $data['contact']= $dream_vehicle->Contact->name;
         $data['status'] = $dream_vehicle->status;
         $data['item_condition'] = $dream_vehicle->item_condition;
-        $data['vehicle_brand']= $dream_vehicle->vehicle_brand;
-        $data['vehicle_name'] = $dream_vehicle->vehicle_name;
-        $data['vehicle_type'] = $dream_vehicle->vehicle_type;
-        $data['vehicle_color'] = $dream_vehicle->vehicle_color;
+        $data['vehicle_brand']= $vehicle_brand;
+        $data['vehicle_name'] = $vehicle_name;
+        $data['vehicle_type'] = $vehicle_type;
+        $data['vehicle_color'] = $vehicle_color;
         $data['transmission'] = $dream_vehicle->transmission;
         $data['payment'] = $dream_vehicle->payment;
         $data['leasing'] = $dream_vehicle->leasing;
@@ -317,15 +333,31 @@ class VehicleController extends Controller
         $dream_vehicle = DreamVehicle::where('contact_id',$id)->get();
 
         foreach($dream_vehicle as $value){
+            $vehicle_name = [
+                'id' => $value->VehicleName->id,
+                'name' => $value->VehicleName->name
+            ];
+            $vehicle_brand = [
+                'id' => $value->VehicleBrand->id,
+                'brand' => $value->VehicleBrand->brand
+            ];
+            $vehicle_color = [
+                'id' => $value->VehicleColor->id,
+                'color' => $value->VehicleColor->color
+            ];
+            $vehicle_type = [
+                'id' => $value->VehicleType->id,
+                'type' => $value->VehicleType->type
+            ];
             $data[] = [
                 'id' => $value->id,
                 'contact' => $value->Contact->name,
                 'status' => $value->status,
                 'item_condition' => $value->item_condition,
-                'vehicle_brand' => $value->vehicle_brand,
-                'vehicle_name' => $value->vehicle_name,
-                'vehicle_type' => $value->vehicle_type,
-                'vehicle_color' => $value->vehicle_color,
+                'vehicle_brand' => $vehicle_brand,
+                'vehicle_name' => $vehicle_name,
+                'vehicle_type' => $vehicle_type,
+                'vehicle_color' => $vehicle_color,
                 'transmission' => $value->transmission,
                 'payment' => $value->payment,
                 'leasing' => $value->leasing,

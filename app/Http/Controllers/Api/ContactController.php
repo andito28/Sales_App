@@ -308,7 +308,13 @@ class ContactController extends Controller
                 }
             }
 
-            $contact->data_origin_id = $request->data_origin;
+            if($request->data_origin == null){
+                $data_origin = $contact->data_origin_id;
+            }else{
+                $data_origin = $request->data_origin;
+            }
+
+            $contact->data_origin_id = $data_origin;
             $contact->name = $request->name;
             $contact->gender = $request->gender;
             $contact->photo = $file_name;
@@ -616,5 +622,11 @@ class ContactController extends Controller
         $phone = Phone::findOrFail($id);
         $phone->delete();
         return ResponseHelper::responseJson("Success",200,"Successful delete phone number",$phone);
+    }
+
+    public function deleteEmail($id){
+        $email = Email::findOrFail($id);
+        $email->delete();
+        return ResponseHelper::responseJson("Success",200,"Successful delete email",$email);
     }
 }

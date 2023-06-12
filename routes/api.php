@@ -52,6 +52,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('v1/get-city-contact',[ContactController::class,'getCityContact']);
     Route::get('v1/get-statistik',[ContactController::class,'getStatistik']);
     Route::delete('v1/delete-phone-number/{id}',[ContactController::class,'deletePhoneNumber']);
+    Route::delete('v1/delete-email/{id}',[ContactController::class,'deleteEmail']);
 
     //vehicle name
     Route::get('v1/get-vehicle-name',[VehicleController::class,'getVehicleName']);

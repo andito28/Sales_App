@@ -20,15 +20,18 @@ class SubmissionPhotoController extends Controller
         if ($validator->fails()) {
             return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
         }
-        $files = $request->file('photo');
+        $files = $request->hasFile('photo');
         if ($files) {
-            $file_name = date('YmdHis').str_replace('', '', $files->getClientOriginalName());
-            Storage::disk('local')->putFileAs('public/photo', $files, $file_name);
+            $images = $request->file('photo');
+            foreach ($images as $image) {
+                $file_name = date('YmdHis').str_replace('', '', $image->getClientOriginalName());
+                Storage::disk('local')->putFileAs('public/photo', $image, $file_name);
+                $data = new SubmissionPhoto();
+                $data->contact_id = $request->contact;
+                $data->photo = $file_name;
+                $data->save();
+            }
         }
-        $data = new SubmissionPhoto();
-        $data->contact_id = $request->contact;
-        $data->photo = $file_name;
-        $data->save();
         return ResponseHelper::responseJson("Success",200,"Successful insert data",$data);
     }
 
