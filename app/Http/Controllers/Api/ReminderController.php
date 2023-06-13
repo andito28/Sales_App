@@ -61,19 +61,32 @@ class ReminderController extends Controller
     }
 
     public function getReminderByContact($id){
-        $data = [];
+        $date = Carbon::now()->toDateString();
+        $time = Carbon::now()->toTimeString();
+        $datetime_now = Carbon::parse($date)->setTimeFromTimeString($time);
+
         $reminder = Reminder::where('user_id',Auth::user()->id)
-                    ->where('contact_id',$id)->get();
+                ->whereDate('reminder_date','>=', $date)
+                ->orderBy('reminder_date','asc')
+                ->orderBy('time','asc')
+                ->where('contact_id',$id)
+                ->get();
+
+        $data = [];
         foreach($reminder as $value){
-            $data[] = [
-                'id' => $value->id,
-                'contact' =>$value->Contact->name,
-                'title' => $value->title,
-                'reminder_date' => $value->reminder_date,
-                'time' => $value->time,
-                'notes' => $value->notes,
-                'frequency' => $value->frequency
-            ];
+            $datetime_db = Carbon::parse($value->reminder_date)->setTimeFromTimeString($value->time);
+            $contact = !empty($value->Contact) ? $value->Contact->name : null;
+            if($datetime_now < $datetime_db){
+                $data[] = [
+                    'id' => $value->id,
+                    'contact' => $contact,
+                    'title' => $value->title,
+                    'reminder_date' => $value->reminder_date,
+                    'time' => $value->time,
+                    'notes' => $value->notes,
+                    'frequency' => $value->frequency
+                ];
+            }
         }
         return ResponseHelper::responseJson("Success",200,"List Reminder",$data);
     }

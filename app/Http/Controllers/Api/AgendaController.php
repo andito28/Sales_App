@@ -47,19 +47,32 @@ class AgendaController extends Controller
     }
 
     public function getAgendaByContact($id){
-        $data = [];
+        $date = Carbon::now()->toDateString();
+        $time = Carbon::now()->toTimeString();
+        $datetime_now = Carbon::parse($date)->setTimeFromTimeString($time);
+
         $agenda = Agenda::where('user_id',Auth::user()->id)
-                        ->where('contact_id',$id)->get();
+                ->whereDate('date','>=', $date)
+                ->orderBy('date','asc')
+                ->orderBy('time','asc')
+                ->where('contact_id',$id)
+                ->get();
+
+        $data = [];
         foreach($agenda as $value){
-            $data[] = [
-                'id' => $value->id,
-                'contact' =>$value->Contact->name,
-                'status' =>$value->status,
-                'title' => $value->title,
-                'date' => $value->date,
-                'time' => $value->time,
-                'location' => $value->location
-            ];
+            $datetime_db = Carbon::parse($value->date)->setTimeFromTimeString($value->time);
+            $contact = !empty($value->Contact) ? $value->Contact->name : null;
+            if($datetime_now < $datetime_db){
+                $data[] = [
+                    'id' => $value->id,
+                    'contact' => $contact,
+                    'title' => $value->title,
+                    'status' => $value->status,
+                    'date' => $value->date,
+                    'time' => $value->time,
+                    'location' => $value->location
+                ];
+            }
         }
         return ResponseHelper::responseJson("Success",200,"List Agenda",$data);
     }

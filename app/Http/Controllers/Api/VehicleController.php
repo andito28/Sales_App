@@ -293,19 +293,19 @@ class VehicleController extends Controller
         $dream_vehicle = DreamVehicle::findOrFail($id);
         $vehicle_name = [
             'id' => $dream_vehicle->VehicleName->id,
-            'name' => $dream_vehicle->VehicleName->name
+            'vehicle_name' => $dream_vehicle->VehicleName->name
         ];
         $vehicle_brand = [
             'id' => $dream_vehicle->VehicleBrand->id,
-            'brand' => $dream_vehicle->VehicleBrand->brand
+            'vehicle_brand' => $dream_vehicle->VehicleBrand->brand
         ];
         $vehicle_color = [
             'id' => $dream_vehicle->VehicleColor->id,
-            'color' => $dream_vehicle->VehicleColor->color
+            'vehicle_color' => $dream_vehicle->VehicleColor->color
         ];
         $vehicle_type = [
             'id' => $dream_vehicle->VehicleType->id,
-            'type' => $dream_vehicle->VehicleType->type
+            'vehicle_type' => $dream_vehicle->VehicleType->type
         ];
         $data['id'] = $dream_vehicle->id;
         $data['contact']= $dream_vehicle->Contact->name;
@@ -335,19 +335,19 @@ class VehicleController extends Controller
         foreach($dream_vehicle as $value){
             $vehicle_name = [
                 'id' => $value->VehicleName->id,
-                'name' => $value->VehicleName->name
+                'vehicle_name' => $value->VehicleName->name
             ];
             $vehicle_brand = [
                 'id' => $value->VehicleBrand->id,
-                'brand' => $value->VehicleBrand->brand
+                'vehicle_brand' => $value->VehicleBrand->brand
             ];
             $vehicle_color = [
                 'id' => $value->VehicleColor->id,
-                'color' => $value->VehicleColor->color
+                'vehicle_color' => $value->VehicleColor->color
             ];
             $vehicle_type = [
                 'id' => $value->VehicleType->id,
-                'type' => $value->VehicleType->type
+                'vehicle_type' => $value->VehicleType->type
             ];
             $data[] = [
                 'id' => $value->id,

@@ -373,13 +373,17 @@ class ContactController extends Controller
             $phones = [];
             foreach($value->Phone as $phone){
                 $phones[] = [
+                    'id' => $phone->id,
                     'number' => $phone->phone_number,
                     'type' => $phone->type
                 ];
             }
             $emails = [];
-            foreach($value->Email as $email){
-                $emails[] = $email->email;
+            foreach($value->Email as $item){
+                $emails[] =[
+                    'id' => $item->id,
+                    'email' => $item->email
+                ];;
             }
             $photo = $value->photo != null ? url('/storage/contact-photo/'.$value->photo) : null;
             $data[] = [
