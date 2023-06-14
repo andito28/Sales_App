@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class VehicleController extends Controller
@@ -218,12 +219,21 @@ class VehicleController extends Controller
             'vehicle_brand' => 'required',
             'vehicle_type' => 'required',
             'vehicle_color' => 'required',
+            'ownership' => 'required',
             'dp' => 'required',
             'notes' => 'required'
         ]);
 
         if ($validator->fails()) {
             return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
+        }
+
+        $files = $request->file('deals_photo');
+        if ($files) {
+            $file_name = date('YmdHis').str_replace('', '', $files->getClientOriginalName());
+            Storage::disk('local')->putFileAs('public/deals-photo', $files, $file_name);
+        }else{
+            $file_name = null;
         }
 
         $dream_vehicle = new DreamVehicle();
@@ -243,6 +253,7 @@ class VehicleController extends Controller
         $dream_vehicle->number_of_month = $request->number_of_month;
         $dream_vehicle->ownership = $request->ownership;
         $dream_vehicle->notes = $request->notes;
+        $dream_vehicle->deals_photo = $file_name;
         $dream_vehicle->sold_status = $request->sold_status;
         $dream_vehicle->save();
         return ResponseHelper::responseJson("Success",200,"Successful insert data",$dream_vehicle);
@@ -267,6 +278,18 @@ class VehicleController extends Controller
         }
 
         $dream_vehicle = DreamVehicle::findOrFail($id);
+
+        $files = $request->file('deals_photo');
+        if ($files) {
+            if($dream_vehicle->deals_photo != null){
+                Storage::delete('/public/deals-photo/'. $dream_vehicle->deals_photo);
+            }
+            $file_name = date('YmdHis').str_replace('', '', $files->getClientOriginalName());
+            Storage::disk('local')->putFileAs('public/deals-photo', $files, $file_name);
+        }else{
+            $file_name = $dream_vehicle->deals_photo;
+        }
+
         $dream_vehicle->id = $request->id;
         $dream_vehicle->status = $request->status;
         $dream_vehicle->contact_id = $request->contact;
@@ -284,6 +307,7 @@ class VehicleController extends Controller
         $dream_vehicle->number_of_month = $request->number_of_month;
         $dream_vehicle->ownership = $request->ownership;
         $dream_vehicle->notes = $request->notes;
+        $dream_vehicle->deals_photo = $file_name;
         $dream_vehicle->sold_status = $request->sold_status;
         $dream_vehicle->save();
         return ResponseHelper::responseJson("Success",200,"Successful update data",$dream_vehicle);
@@ -291,6 +315,7 @@ class VehicleController extends Controller
 
     public function detailDreamVehicle($id){
         $dream_vehicle = DreamVehicle::findOrFail($id);
+        $deals_photo = $dream_vehicle->deals_photo != null ? url('storage/deals-photo/'.$dream_vehicle->deals_photo) : null ;
         $vehicle_name = [
             'id' => $dream_vehicle->VehicleName->id,
             'vehicle_name' => $dream_vehicle->VehicleName->name
@@ -324,6 +349,7 @@ class VehicleController extends Controller
         $data['number_of_month'] = $dream_vehicle->number_of_month;
         $data['ownership'] = $dream_vehicle->ownership;
         $data['notes'] = $dream_vehicle->notes;
+        $data['deals_photo'] = $deals_photo;
         $data['sold_status'] = $dream_vehicle->sold_status;
         return ResponseHelper::responseJson("Success",200,"Detail Dream Vehicle",$data);
     }
@@ -333,6 +359,7 @@ class VehicleController extends Controller
         $dream_vehicle = DreamVehicle::where('contact_id',$id)->get();
 
         foreach($dream_vehicle as $value){
+            $deals_photo = $value->deals_photo != null ? url('storage/deals-photo/'.$value->deals_photo) : null ;
             $vehicle_name = [
                 'id' => $value->VehicleName->id,
                 'vehicle_name' => $value->VehicleName->name
@@ -367,9 +394,25 @@ class VehicleController extends Controller
                 'number_of_month' => $value->number_of_month,
                 'ownership' => $value->ownership,
                 'notes' => $value->notes,
+                'deals_photo' => $deals_photo,
                 'sold_status' => $value->sold_status,
             ];
         }
         return ResponseHelper::responseJson("Success",200,"List Dream Vehicle",$data);
+    }
+
+    public function GetDealsPhoto(Request $request){
+        $id = $request->contact;
+        $datas = DreamVehicle::select('id','deals_photo')->where('contact_id',$id)->get();
+        $data = [];
+        foreach($datas as $value){
+            if($value->deals_photo != null){
+                $data[] = [
+                    'id' => $value->id,
+                    'deals_photo' => url('storage/deals-photo/'.$value->deals_photo)
+                ];
+            }
+        }
+        return ResponseHelper::responseJson("Success",200,"List Deals Photo",$data);
     }
 }

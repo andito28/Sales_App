@@ -83,6 +83,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('v1/create-dream-vehicle',[VehicleController::class,'createDreamVehicle']);
     Route::put('v1/update-dream-vehicle/{id}',[VehicleController::class,'updateDreamVehicle']);
     Route::get('v1/detail-dream-vehicle/{id}',[VehicleController::class,'detailDreamVehicle']);
+    Route::get('v1/get-deals-photo',[VehicleController::class,'getDealsPhoto']);
 
     //ToDo
     Route::get('v1/get-todo',[ToDoController::class,'getAllToDo']);

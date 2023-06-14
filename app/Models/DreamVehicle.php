@@ -27,6 +27,7 @@ class DreamVehicle extends Model
         'number_of_month',
         'ownership',
         'notes',
+        'deals_photo',
         'sold_status',
     ];
 
