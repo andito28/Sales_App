@@ -1,7 +1,7 @@
 <div class="container-fluid g-0">
     <div class="row">
         <div class="col-lg-12 p-0">
-            <div class="header_iner d-flex justify-content-between align-items-center">
+            <div class="header_iner d-flex justify-content-between align-items-center pb-2 pt-2">
                 <div class="sidebar_icon d-lg-none">
                     <i class="ti-menu"></i>
                 </div>
@@ -10,7 +10,7 @@
                         <img src="{{ asset('pages') }}/img/client_img.png" alt="#">
                         <div class="profile_info_iner">
                             <div class="profile_author_name">
-                                <p>Neurologist </p>
+                                <p>{{ Auth::user()->name }} </p>
                             </div>
                             <div class="profile_info_details">
                                 <form action="{{ route('logout') }}" method="POST">
