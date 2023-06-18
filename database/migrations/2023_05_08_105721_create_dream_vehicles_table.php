@@ -17,7 +17,7 @@ class CreateDreamVehiclesTable extends Migration
             $table->id();
             $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade')->onUpdate('cascade');
             $table->enum('status',['dream','bought']);
-            $table->string('item_condition');
+            $table->enum('item_condition',['baru','bekas','trade in']);
             $table->foreignId('vehicle_brand_id')->constrained('vehicle_brands')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('vehicle_name_id')->constrained('vehicle_names')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('vehicle_type_id')->constrained('vehicle_types')->onDelete('cascade')->onUpdate('cascade');

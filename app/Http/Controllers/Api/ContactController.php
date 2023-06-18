@@ -410,6 +410,14 @@ class ContactController extends Controller
         $month = $request->month;
         $year = $request->year;
 
+        $sold_items = DreamVehicle::whereHas('Contact', function ($query) {
+            $query->where('user_id',Auth::user()->id);
+        })
+        ->whereMonth('purchase_date',$month)
+        ->whereYear('purchase_date',$year)
+        ->where('sold_status','true')->count();
+
+
         $new_item_condition = DreamVehicle::whereHas('Contact', function ($query) {
             $query->where('user_id',Auth::user()->id);
         })
@@ -435,18 +443,18 @@ class ContactController extends Controller
         ->where('sold_status','true')->count();
 
         $total_consumen = Contact::where('user_id',Auth::user()->id)
-        ->whereMonth('created_at',$month)
-        ->whereYear('created_at',$year)
+        ->whereMonth('save_date',$month)
+        ->whereYear('save_date',$year)
         ->count();
 
         $total_males = Contact::where('user_id',Auth::user()->id)
-        ->whereMonth('created_at',$month)
-        ->whereYear('created_at',$year)
+        ->whereMonth('save_date',$month)
+        ->whereYear('save_date',$year)
         ->where('gender','laki-laki')->count();
 
         $total_females = Contact::where('user_id',Auth::user()->id)
-        ->whereMonth('created_at',$month)
-        ->whereYear('created_at',$year)
+        ->whereMonth('save_date',$month)
+        ->whereYear('save_date',$year)
         ->where('gender','perempuan')->count();
 
         $total_cash_sales_types = DreamVehicle::whereHas('Contact', function ($query) {
@@ -604,6 +612,7 @@ class ContactController extends Controller
         ];
 
         $data = [
+            'sold_items' => $sold_items,
             'item_condition' => $item_condition,
             'total_consumen' => $total_consumen,
             'gender' => $gender,

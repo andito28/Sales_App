@@ -246,6 +246,7 @@ class VehicleController extends Controller
         $dream_vehicle->vehicle_color_id = $request->vehicle_color;
         $dream_vehicle->transmission = $request->transmission;
         $dream_vehicle->payment = $request->payment;
+        $dream_vehicle->purchase_date = $request->purchase_date;
         $dream_vehicle->leasing = $request->leasing;
         $dream_vehicle->dp = $request->dp;
         $dream_vehicle->repayment = $request->repayment;
@@ -300,6 +301,7 @@ class VehicleController extends Controller
         $dream_vehicle->vehicle_color_id = $request->vehicle_color;
         $dream_vehicle->transmission = $request->transmission;
         $dream_vehicle->payment = $request->payment;
+        $dream_vehicle->purchase_date = $request->purchase_date;
         $dream_vehicle->leasing = $request->leasing;
         $dream_vehicle->dp = $request->dp;
         $dream_vehicle->repayment = $request->repayment;
@@ -334,6 +336,7 @@ class VehicleController extends Controller
         ];
         $data['id'] = $dream_vehicle->id;
         $data['contact']= $dream_vehicle->Contact->name;
+        $data['contact_id']= $dream_vehicle->Contact->id;
         $data['status'] = $dream_vehicle->status;
         $data['item_condition'] = $dream_vehicle->item_condition;
         $data['vehicle_brand']= $vehicle_brand;
@@ -342,6 +345,7 @@ class VehicleController extends Controller
         $data['vehicle_color'] = $vehicle_color;
         $data['transmission'] = $dream_vehicle->transmission;
         $data['payment'] = $dream_vehicle->payment;
+        $data['purchase_date'] = $dream_vehicle->purchase_date;
         $data['leasing'] = $dream_vehicle->leasing;
         $data['dp']= $dream_vehicle->dp;
         $data['repayment'] = $dream_vehicle->repayment;
@@ -379,6 +383,7 @@ class VehicleController extends Controller
             $data[] = [
                 'id' => $value->id,
                 'contact' => $value->Contact->name,
+                'contact_id' => $value->Contact->id,
                 'status' => $value->status,
                 'item_condition' => $value->item_condition,
                 'vehicle_brand' => $vehicle_brand,
@@ -387,6 +392,7 @@ class VehicleController extends Controller
                 'vehicle_color' => $vehicle_color,
                 'transmission' => $value->transmission,
                 'payment' => $value->payment,
+                'purchase_date' => $value->purchase_date,
                 'leasing' => $value->leasing,
                 'dp'=> $value->dp,
                 'repayment' => $value->repayment,
