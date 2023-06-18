@@ -16,6 +16,7 @@ class CreateSubscribersTable extends Migration
         Schema::create('subscribers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('subscription_package_id')->constrained('subscription_packages')->onDelete('cascade')->onUpdate('cascade')->nullable();
             $table->enum('status',['free','subscriber']);
             $table->date('validity_period');
             $table->timestamps();
