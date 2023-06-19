@@ -13,4 +13,8 @@ class Subscriber extends Model
         'user_id',
         'validity_period'
     ];
+
+    public function subscriptionPackage(){
+        return $this->belongsTo(SubscriptionPackage::class,'subscription_package_id');
+    }
 }

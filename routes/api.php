@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReminderController;
 use App\Http\Controllers\Api\AffiliateController;
+use App\Http\Controllers\Api\SubscriberController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\SubmissionPhotoController;
 
@@ -24,6 +25,9 @@ Route::get('v1/check-reminder',[ReminderController::class,'checkReminder']);
 //Get region
 Route::get('v1/get-provinces',[RegionController::class,'getProvinces']);
 Route::get('v1/get-regencies',[RegionController::class,'getRegencies']);
+
+//subscription packages
+Route::get('v1/get-subscription-packages',[SubscriberController::class,'getSubscriptionPackages']);
 
 
 Route::group(['middleware' => ['auth:api']], function () {
@@ -122,4 +126,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('v1/get-notification',[NotificationController::class,'getNotification']);
     Route::put('v1/update-notification/{id}',[NotificationController::class,'updateNotification']);
     Route::delete('v1/delete-notification/{id}',[NotificationController::class,'destroyNotification']);
+
+    //subscriber
+    Route::get('v1/get-info-subscriber',[SubscriberController::class,'getInfoSubscriber']);
 });

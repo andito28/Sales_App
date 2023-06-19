@@ -366,7 +366,9 @@ class ContactController extends Controller
     }
 
     public function searchContact(Request $request){
-        $contact = Contact::where('user_id',Auth::user()->id)->where('name','like',"%".$request->name."%")->get();
+        $page = $request->query('page', 1);
+        $limit = $request->query('limit', 10);
+        $contact = Contact::where('user_id',Auth::user()->id)->where('name','like',"%".$request->name."%")->paginate($limit, ['*'], 'page', $page);
         $data = [];
         foreach($contact as $value){
             $data_origin = !empty($value->DataOrigin) ? $value->DataOrigin->information : null;
