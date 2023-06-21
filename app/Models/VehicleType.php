@@ -11,6 +11,7 @@ class VehicleType extends Model
 
     protected $fillable = [
         'user_id',
+        'vehicle_name_id',
         'type'
     ];
 

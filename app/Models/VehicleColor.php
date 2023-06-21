@@ -11,6 +11,7 @@ class VehicleColor extends Model
 
     protected $fillable = [
         'user_id',
+        'vehicle_name_id',
         'color'
     ];
 

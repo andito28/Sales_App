@@ -16,6 +16,7 @@ class CreateVehicleColorsTable extends Migration
         Schema::create('vehicle_colors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('vehicle_name_id')->constrained('vehicle_names')->onDelete('cascade')->onUpdate('cascade');
             $table->string('color');
             $table->timestamps();
         });

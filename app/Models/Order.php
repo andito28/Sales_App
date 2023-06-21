@@ -12,6 +12,11 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'subscription_package_id',
+        'evidence_of_transfer',
+        'bank_name',
+        'name',
+        'uniq_number',
+        'affiliate_code',
         'total_price',
         'status'
     ];

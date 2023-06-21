@@ -19,7 +19,7 @@ class CreateContactsTable extends Migration
             $table->foreignId('data_origin_id')->constrained('data_origins')->onDelete('cascade')->onUpdate('cascade')->nullable();
             $table->string('name');
             $table->enum('gender',['laki-laki','perempuan']);
-            $table->enum('status',['hot','medium','low','follow_up','next_follow_up','customer']);
+            $table->enum('status',['netral','hot','medium','low','follow_up','next_follow_up','customer']);
             $table->string('photo')->nullable();
             $table->string('city')->nullable();
             $table->string('address')->nullable();
