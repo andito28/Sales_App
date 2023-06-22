@@ -17,13 +17,18 @@ use Illuminate\Support\Facades\Validator;
 class VehicleController extends Controller
 {
     //CRUD Vehicle name
-    public function getVehicleName(){
+    public function getVehicleName($id){
         $data = [];
-        $vehicle = VehicleName::all();
+        $vehicle = VehicleName::where('vehicle_brand_id',$id)->get();
         foreach($vehicle as $value){
+            $vehicle_brand = [
+                'id' => $value->vehicleBrand->id,
+                'brand' => $value->vehicleBrand->brand
+            ];
             $data[] = [
                 'id' => $value->id,
-                'vehicle_name'=>$value->name
+                'vehicle_name'=>$value->name,
+                'vehicle_brand' => $vehicle_brand
             ];
         }
         return ResponseHelper::responseJson("Success",200,"Vehicle Name Data",$data);
@@ -32,13 +37,15 @@ class VehicleController extends Controller
     public function createVehicleName(Request $request){
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
-            'vehicle_name' => 'required'
+            'vehicle_name' => 'required',
+            'vehicle_brand' => 'required'
         ]);
         if ($validator->fails()) {
             return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
         }
         $vehicle = new VehicleName();
         $vehicle->user_id = Auth::user()->id;
+        $vehicle->vehicle_brand_id = $request->vehicle_brand;
         $vehicle->name = $request->vehicle_name;
         $vehicle->save();
         return ResponseHelper::responseJson("Success",200,"Successful insert data",$vehicle);
@@ -47,12 +54,14 @@ class VehicleController extends Controller
     public function updateVehicleName(Request $request,$id){
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
-            'vehicle_name' => 'required'
+            'vehicle_name' => 'required',
+            'vehicle_brand' => 'required'
         ]);
         if ($validator->fails()) {
             return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
         }
         $vehicle = VehicleName::findOrFail($id);
+        $vehicle->vehicle_brand_id = $request->vehicle_brand;
         $vehicle->name = $request->vehicle_name;
         $vehicle->save();
         return ResponseHelper::responseJson("Success",200,"Successful update data",$vehicle);
@@ -113,13 +122,18 @@ class VehicleController extends Controller
     }
 
     //CRUD Vehicle Type
-    public function getVehicleType(){
+    public function getVehicleType($id){
         $data = [];
-        $vehicle = VehicleType::all();
+        $vehicle = VehicleType::where('vehicle_name_id',$id)->get();
         foreach($vehicle as $value){
+            $vehicle_name = [
+                'id' => $value->vehicleName->id,
+                'name' => $value->vehicleName->name
+            ];
             $data[] = [
                 'id' => $value->id,
-                'vehicle_type'=>$value->type
+                'vehicle_type'=>$value->type,
+                'vehicle_name'=> $vehicle_name
             ];
         }
         return ResponseHelper::responseJson("Success",200,"Vehicle Type Data",$data);
@@ -128,6 +142,7 @@ class VehicleController extends Controller
     public function createVehicleType(Request $request){
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
+            'vehicle_name' => 'required',
             'vehicle_type' => 'required'
         ]);
         if ($validator->fails()) {
@@ -135,6 +150,7 @@ class VehicleController extends Controller
         }
         $vehicle = new VehicleType();
         $vehicle->user_id = Auth::user()->id;
+        $vehicle->vehicle_name_id = $request->vehicle_name;
         $vehicle->type = $request->vehicle_type;
         $vehicle->save();
         return ResponseHelper::responseJson("Success",200,"Successful insert data",$vehicle);
@@ -143,12 +159,14 @@ class VehicleController extends Controller
     public function updateVehicleType(Request $request,$id){
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
+            'vehicle_name' => 'required',
             'vehicle_type' => 'required'
         ]);
         if ($validator->fails()) {
             return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
         }
         $vehicle = VehicleType::findOrFail($id);
+        $vehicle->vehicle_name_id = $request->vehicle_name;
         $vehicle->type = $request->vehicle_type;
         $vehicle->save();
         return ResponseHelper::responseJson("Success",200,"Successful update data",$vehicle);
@@ -161,13 +179,18 @@ class VehicleController extends Controller
     }
 
      //CRUD Vehicle Color
-    public function getVehicleColor(){
+    public function getVehicleColor($id){
         $data = [];
-        $vehicle = VehicleColor::all();
+        $vehicle = VehicleColor::where('vehicle_name_id',$id)->get();
         foreach($vehicle as $value){
+            $vehicle_name = [
+                'id' => $value->vehicleName->id,
+                'name' => $value->vehicleName->name
+            ];
             $data[] = [
                 'id' => $value->id,
-                'vehicle_color'=>$value->color
+                'vehicle_color'=>$value->color,
+                'vehicle_name' => $vehicle_name
             ];
         }
         return ResponseHelper::responseJson("Success",200,"Vehicle Color Data",$data);
@@ -176,6 +199,7 @@ class VehicleController extends Controller
     public function createVehicleColor(Request $request){
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
+            'vehicle_name' => 'required',
             'vehicle_color' => 'required'
         ]);
         if ($validator->fails()) {
@@ -183,6 +207,7 @@ class VehicleController extends Controller
         }
         $vehicle = new VehicleColor();
         $vehicle->user_id = Auth::user()->id;
+        $vehicle->vehicle_name_id = $request->vehicle_name;
         $vehicle->color = $request->vehicle_color;
         $vehicle->save();
         return ResponseHelper::responseJson("Success",200,"Successful insert data",$vehicle);
@@ -191,12 +216,14 @@ class VehicleController extends Controller
     public function updateVehicleColor(Request $request,$id){
         $data_validate = $request->all();
         $validator = Validator::make($data_validate, [
+            'vehicle_name' => 'required',
             'vehicle_color' => 'required'
         ]);
         if ($validator->fails()) {
             return ResponseHelper::responseJson("Error",422,"Validasi Error",$validator->errors());
         }
         $vehicle = VehicleColor::findOrFail($id);
+        $vehicle->vehicle_name_id = $request->vehicle_name;
         $vehicle->color = $request->vehicle_color;
         $vehicle->save();
         return ResponseHelper::responseJson("Success",200,"Successful update data",$vehicle);

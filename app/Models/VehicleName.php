@@ -18,4 +18,8 @@ class VehicleName extends Model
     public function DreamVehicle(){
         return $this->hasMany(DreamVehicle::class);
     }
+
+    public function vehicleBrand(){
+        return $this->belongsTo(VehicleBrand::class);
+    }
 }

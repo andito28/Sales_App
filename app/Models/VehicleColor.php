@@ -18,4 +18,8 @@ class VehicleColor extends Model
     public function DreamVehicle(){
         return $this->hasMany(DreamVehicle::class);
     }
+
+    public function vehicleName(){
+        return $this->belongsTo(VehicleName::class);
+    }
 }

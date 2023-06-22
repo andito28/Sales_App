@@ -59,7 +59,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::delete('v1/delete-email/{id}',[ContactController::class,'deleteEmail']);
 
     //vehicle name
-    Route::get('v1/get-vehicle-name',[VehicleController::class,'getVehicleName']);
+    Route::get('v1/get-vehicle-name/brand/{id}',[VehicleController::class,'getVehicleName']);
     Route::post('v1/create-vehicle-name',[VehicleController::class,'createVehicleName']);
     Route::put('v1/update-vehicle-name/{id}',[VehicleController::class,'updateVehicleName']);
     Route::delete('v1/delete-vehicle-name/{id}',[VehicleController::class,'deleteVehicleName']);
@@ -71,13 +71,13 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::delete('v1/delete-vehicle-brand/{id}',[VehicleController::class,'deleteVehicleBrand']);
 
     //vehicle type
-    Route::get('v1/get-vehicle-type',[VehicleController::class,'getVehicleType']);
+    Route::get('v1/get-vehicle-type/name/{id}',[VehicleController::class,'getVehicleType']);
     Route::post('v1/create-vehicle-type',[VehicleController::class,'createVehicleType']);
     Route::put('v1/update-vehicle-type/{id}',[VehicleController::class,'updateVehicleType']);
     Route::delete('v1/delete-vehicle-type/{id}',[VehicleController::class,'deleteVehicleType']);
 
     //vehicle color
-    Route::get('v1/get-vehicle-color',[VehicleController::class,'getVehicleColor']);
+    Route::get('v1/get-vehicle-color/name/{id}',[VehicleController::class,'getVehicleColor']);
     Route::post('v1/create-vehicle-color',[VehicleController::class,'createVehicleColor']);
     Route::put('v1/update-vehicle-color/{id}',[VehicleController::class,'updateVehicleColor']);
     Route::delete('v1/delete-vehicle-color/{id}',[VehicleController::class,'deleteVehicleColor']);
