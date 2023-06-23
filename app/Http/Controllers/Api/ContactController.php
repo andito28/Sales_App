@@ -113,9 +113,11 @@ class ContactController extends Controller
                     $q->where('vehicle_name_id',$vehicle_name);
                 })->get();
             }
-            $contact =  $query->paginate($limit, ['*'], 'page', $page);
+            $contact =  $query->orderBy('name','asc')->paginate($limit, ['*'], 'page', $page);
         }else{
-            $contact = Contact::where('user_id',Auth::user()->id)->paginate($limit, ['*'], 'page', $page);
+            $contact = Contact::where('user_id',Auth::user()->id)
+                        ->orderBy('name','asc')
+                        ->paginate($limit, ['*'], 'page', $page);
         }
         foreach($contact as $value){
             $phone = [];
@@ -368,7 +370,10 @@ class ContactController extends Controller
     public function searchContact(Request $request){
         $page = $request->query('page', 1);
         $limit = $request->query('limit', 10);
-        $contact = Contact::where('user_id',Auth::user()->id)->where('name','like',"%".$request->name."%")->paginate($limit, ['*'], 'page', $page);
+        $contact = Contact::where('user_id',Auth::user()->id)
+                        ->where('name','like',"%".$request->name."%")
+                        ->orderBy('name','asc')
+                        ->paginate($limit, ['*'], 'page', $page);
         $data = [];
         foreach($contact as $value){
             $data_origin = !empty($value->DataOrigin) ? $value->DataOrigin->information : null;
