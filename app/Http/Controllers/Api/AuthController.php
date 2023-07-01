@@ -53,21 +53,37 @@ class AuthController extends Controller
             return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
 
-        $now = Carbon::now();
-        $futureDate = $now->addDays(14);
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $subscriber = new Subscriber();
-        $subscriber->user_id = $user->id;
-        $subscriber->validity_period = $futureDate;
-        $subscriber->save();
-        $data['name'] = $user->name;
-        $data['email'] = $user->email;
-        $data['phone'] = $user->phone;
-        $data['firebase_token'] = $user->firebase_token;
-        $data['token'] = $user->createToken('nApp')->accessToken;
-        return ResponseHelper::responseJson("Success",200,"Successful Register",$data);
+        try{
+            $now = Carbon::now();
+            $futureDate = $now->addDays(14);
+            $input = $request->all();
+            $input['password'] = bcrypt($input['password']);
+            $user = User::create($input);
+            $subscriber = new Subscriber();
+            $subscriber->user_id = $user->id;
+            $subscriber->validity_period = $futureDate;
+            $subscriber->save();
+            $data['name'] = $user->name;
+            $data['email'] = $user->email;
+            $data['phone'] = $user->phone;
+            $data['firebase_token'] = $user->firebase_token;
+            $data['token'] = $user->createToken('nApp')->accessToken;
+            $letters = Str::random(5);
+            $numbers = '';
+            for ($i = 0; $i < 3; $i++) {
+                $numbers .= rand(0, 9);
+            }
+            $randomString = str_shuffle($letters . $numbers);
+            $affiliate_code = strtoupper($randomString);
+            $affiliate = new Affiliate();
+            $affiliate->user_id  = $user->id;
+            $affiliate->affiliate_code = $affiliate_code;
+            $affiliate->save();
+            $data['affiliate_code'] = $user->Affiliate->affiliate_code;
+            return ResponseHelper::responseJson("Success",200,"Successful Register",$data);
+        }catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to save data.']);
+        }
     }
 
     public function getProfile(){

@@ -129,4 +129,6 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     //subscriber
     Route::get('v1/get-info-subscriber',[SubscriberController::class,'getInfoSubscriber']);
+    Route::get('v1/get-payment-detail',[SubscriberController::class,'getPaymentDetail']);
+    Route::post('v1/create-subscriber',[SubscriberController::class,'createSubscriber']);
 });

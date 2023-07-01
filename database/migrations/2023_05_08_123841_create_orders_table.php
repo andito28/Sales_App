@@ -22,7 +22,7 @@ class CreateOrdersTable extends Migration
             $table->string('name');
             $table->integer('total_price');
             $table->integer('uniq_number');
-            $table->enum('status',['unpaid','paid']);
+            $table->enum('status',['pending','success','rejected']);
             $table->foreignId('affiliate_id')->constrained('affiliates')->onDelete('cascade')->onUpdate('cascade')->nullable();
             $table->timestamps();
         });
