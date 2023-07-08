@@ -21,6 +21,10 @@ class Order extends Model
         'status'
     ];
 
+    public function User(){
+        return $this->belongsTo(User::class);
+    }
+
     public function SubscriptionPackage(){
         return $this->belongsTo(SubscriptionPackage::class);
     }

@@ -32,15 +32,15 @@
                             <div class="card_box position-relative  mb_30  bg_card">
                                 <div class="box_body px-2 py-4">
                                     <h4 class="text-white">TOTAL SALES</h4>
-                                    <h2 class="text-white">3456</h2>
+                                    <h2 class="text-white">{{ $sales }}</h2>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="card_box position-relative  mb_30  bg_card">
                                 <div class="box_body px-2 py-4">
-                                    <h4 class="text-white">TOTAL CONTACT</h4>
-                                    <h2 class="text-white">8567</h2>
+                                    <h4 class="text-white">TOTAL LANGGANAN</h4>
+                                    <h2 class="text-white">{{ $subscriber }}</h2>
                                 </div>
                             </div>
                         </div>

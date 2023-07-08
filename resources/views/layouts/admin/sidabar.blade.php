@@ -1,3 +1,7 @@
+@php
+    use App\Models\Order;
+    $count = Order::where('status', 'pending')->count();
+@endphp
 <nav class="sidebar vertical-scroll  ps-container ps-theme-default ps-active-y">
     <div class="logo d-flex justify-content-between mb-0 pb-0">
         <h3><a href="/">DRCC</a></h3>
@@ -15,7 +19,7 @@
             </a>
         </li>
         <li class="">
-            <a href="">
+            <a href="{{ route('dashboard.sales') }}">
                 <div class="icon_menu">
                     <img src="{{ asset('pages/img/menu-icon/4.svg') }}" alt="">
                 </div>
@@ -23,36 +27,16 @@
             </a>
         </li>
         <li class="">
-            <a href="Board.html" aria-expanded="false">
+            <a href="{{ route('dashboard.transaksi') }}" aria-expanded="false">
                 <div class="icon_menu">
                     <img src="{{ asset('pages/') }}/img/menu-icon/5.svg" alt="">
                 </div>
-                <span>Penjualan</span>
+                <span>Transaksi
+                    <span class="badge rounded-pill bg-danger">
+                        {{ $count }}
+                    </span>
+                </span>
             </a>
         </li>
-        {{-- <li class="">
-            <a href="invoice.html" aria-expanded="false">
-                <div class="icon_menu">
-                    <img src="{{ asset('pages') }}/img/menu-icon/6.svg" alt="">
-                </div>
-                <span>Objek Wisata</span>
-            </a>
-        </li>
-        <li class="">
-            <a href="calender.html" aria-expanded="false">
-                <div class="icon_menu">
-                    <img src="{{ asset('pages') }}/img/menu-icon/7.svg" alt="">
-                </div>
-                <span>Daftar Villa</span>
-            </a>
-        </li>
-        <li class="">
-            <a href="calender.html" aria-expanded="false">
-                <div class="icon_menu">
-                    <img src="{{ asset('pages') }}/img/menu-icon/2.svg" alt="">
-                </div>
-                <span>Booking Villa</span>
-            </a>
-        </li> --}}
     </ul>
 </nav>
