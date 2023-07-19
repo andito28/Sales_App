@@ -29,6 +29,7 @@ class SubscriberController extends Controller
         if($today <= $subscriber->validity_period){
             if($subscriber->subscriptionPackage != null){
                 $subscription_package = [
+                    'subscription_package_id' => $subscriber->subscriptionPackage->id,
                     'package_name' => $subscriber->subscriptionPackage->package_name,
                     'normal_price' => $subscriber->subscriptionPackage->normal_price,
                     'prices_apply' => $subscriber->subscriptionPackage->prices_apply,
