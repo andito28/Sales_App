@@ -160,7 +160,10 @@ class SubscriberController extends Controller
     }
 
     public function getFeeByUser(){
-        $data = UserFee::select('fee','paid')->where('user_id',Auth::user()->id)->where('status','true')->get();
+        $data = UserFee::select('fee','paid')
+        ->where('user_id',Auth::user()->id)
+        ->where('paid','false')
+        ->where('status','true')->get();
         return ResponseHelper::responseJson("Success",200,"User Fee",$data);
     }
 }
