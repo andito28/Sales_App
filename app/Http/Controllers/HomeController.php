@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\UserFee;
 use App\Models\Subscriber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Models\SubscriptionPackage;
-use Alert;
 
 class HomeController extends Controller
 {
@@ -40,25 +42,33 @@ class HomeController extends Controller
         $order = Order::findOrFail($id);
         return response()->json($order);
     }
-
     public function confirm(Request $request){
-    $order = Order::findOrFail($request->id);
-    if($request->status == 'success'){
-        $package = SubscriptionPackage::findOrFail($request->package_id);
-        $month = $package->number_of_month;
-        $now = Carbon::now();
-        $futureDate = $now->addMonths($month);
-        $subscriber =  Subscriber::where('user_id',$order->user_id)->first();
-        $subscriber->status = "subscriber";
-        $subscriber->validity_period = $futureDate;
-        $subscriber->save();
-        $order->status = $request->status;
-        $order->save();
-        Alert::success('Berhasil', 'Berhasil Mengupdate Status');
-        return redirect()->route('dashboard.transaksi');
-    }
+        $order = Order::findOrFail($request->id);
+        $message = '';
+            DB::transaction(function () use ($request,&$order,&$message) {
+                if($request->status == 'success'){
+                    $package = SubscriptionPackage::findOrFail($request->package_id);
+                    $month = $package->number_of_month;
+                    $now = Carbon::now();
+                    $futureDate = $now->addMonths($month);
+                    $subscriber =  Subscriber::where('user_id',$order->user_id)->first();
+                    $subscriber->status = "subscriber";
+                    $subscriber->validity_period = $futureDate;
+                    $subscriber->save();
+                    $order->status = $request->status;
+                    $order->save();
+                    $user_fee = UserFee::where('user_id',$order->Affiliate->user_id)->first();
+                    $user_fee->status = 'true';
+                    $user_fee->save();
+                    $message = 'success';
+                }
+            });
 
-
-
-    }
+            if($message == 'success'){
+                Alert::success('Berhasil', 'Berhasil Mengupdate Status');
+            }else{
+                Alert::warning('Berhasil', 'Gagal Mengupdate Status');
+            }
+            return redirect()->route('dashboard.transaksi');
+        }
 }

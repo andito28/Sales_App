@@ -18,6 +18,7 @@ class CreateUserFeesTable extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('fee');
             $table->enum('paid',['false','true']);
+            $table->enum('status',['false','true']);
             $table->timestamps();
         });
     }

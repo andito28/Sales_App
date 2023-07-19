@@ -28,4 +28,8 @@ class Order extends Model
     public function SubscriptionPackage(){
         return $this->belongsTo(SubscriptionPackage::class);
     }
+
+    public function Affiliate(){
+        return $this->belongsTo(Affiliate::class,'affiliate_id');
+    }
 }

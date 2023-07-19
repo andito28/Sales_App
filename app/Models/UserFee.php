@@ -12,7 +12,8 @@ class UserFee extends Model
     protected $fillable = [
         'user_id',
         'fee',
-        'paid'
+        'paid',
+        'status'
     ];
 
     public function User(){

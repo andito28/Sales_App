@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Order;
+use App\Models\UserFee;
 use App\Models\Affiliate;
 use App\Models\Subscriber;
 use Illuminate\Http\Request;
@@ -67,19 +68,23 @@ class SubscriberController extends Controller
                 }
                 $data_uniq_number = $uniqueNumber;
             }
-            $order_affiliate = Order::where('affiliate_id',$code_affiliate_id)->exists();
+            $order_affiliate = Order::where('affiliate_id',$code_affiliate_id)
+            ->where('user_id',Auth::user()->id)->exists();
             if($code_affiliate && !$order_affiliate){
                 $price = $request->package_price;
                 $discount = $price * 0.1;
                 $total_price = ($price - $discount);
+                $user_fee = true;
             }else{
                 $total_price = $request->package_price;
+                $user_fee = false;
             }
             $price_result = ($total_price - 1000 + $data_uniq_number);
             $data = [
                 'total_price' => $price_result,
                 'unique_number' => $data_uniq_number,
-                'affiliate_id' => $code_affiliate_id
+                'affiliate_id' => $code_affiliate_id,
+                'user_fee' => $user_fee
             ];
             return ResponseHelper::responseJson("Success",200,"Payment Detail",$data);
 
@@ -102,6 +107,15 @@ class SubscriberController extends Controller
         if ($validator->fails()) {
             return ResponseHelper::responseJson("Error",422,$validator->errors(),null);
         }
+
+        if($request->affiliate_id != null && $request->user_fee == true){
+            $affiliate = Affiliate::findOrfail($request->affiliate_id);
+            $user_fee = new UserFee();
+            $user_fee->user_id = $affiliate->User->id;
+            $user_fee->fee = 10000;
+            $user_fee->save();
+        }
+
         $files = $request->file('evidence_of_transfer');
         if ($files) {
             $file_name = date('YmdHis') . str_replace('', '', $files->getClientOriginalName());
@@ -143,5 +157,10 @@ class SubscriberController extends Controller
     private function generateUniqueNumber()
     {
         return mt_rand(100, 999);
+    }
+
+    public function getFeeByUser(){
+        $data = UserFee::select('fee','paid')->where('user_id',Auth::user()->id)->where('status','true')->get();
+        return ResponseHelper::responseJson("Success",200,"User Fee",$data);
     }
 }
