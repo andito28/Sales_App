@@ -28,6 +28,8 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('province')->nullable();
+            $table->string('bank_name')->nullable();
+            $table->string('account_number')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

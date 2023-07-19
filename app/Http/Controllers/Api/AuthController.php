@@ -101,6 +101,8 @@ class AuthController extends Controller
         $data['city'] = $user->city;
         $data['address'] = $user->address;
         $data['workplace'] = $user->workplace;
+        $data['bank_name'] = $user->bank_name;
+        $data['account_number'] = $user->account_number;
         return ResponseHelper::responseJson("Success",200,"Profile User",$data);
     }
 
@@ -133,6 +135,8 @@ class AuthController extends Controller
         $data->address = $request->address;
         $data->city = $request->city;
         $data->province = $request->province;
+        $data->bank_name = $request->bank_name;
+        $data->account_number = $request->account_number;
         $data->save();
         return ResponseHelper::responseJson("Success",200,"Successful updated data",$data);
     }

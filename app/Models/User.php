@@ -27,7 +27,9 @@ class User extends Authenticatable
         'workplace',
         'address',
         'city',
-        'province'
+        'province',
+        'bank_name',
+        'account_number'
     ];
 
     /**
