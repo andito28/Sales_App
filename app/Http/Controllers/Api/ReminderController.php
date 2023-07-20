@@ -4,24 +4,31 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Reminder;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
+use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Collection;
 
 class ReminderController extends Controller
 {
     public function checkReminder(){
         $date_now = Carbon::now();
-        $reminders = Reminder::whereDate('date',$date_now->toDateString())->get();
+        $reminders = Reminder::whereDate('reminder_date',$date_now->toDateString())->get();
         foreach($reminders as $reminder){
             $hour_reminder = date('h',strtotime($reminder->time));
             $minute_reminder = date('i',strtotime($reminder->time));
             if($hour_reminder == $date_now->hour){
                 if($date_now->minute >= $minute_reminder  && $date_now->minute <=  ($minute_reminder+1) ){
-                    return response()->json('reminder');
+                    Notification::create([
+                        'user_id' => $reminder->user_id,
+                        'notification' => $reminder->title
+                    ]);
+                    return response()->json([
+                        'message' => 'Success create notification'
+                    ]);
                 }
             }
         }
