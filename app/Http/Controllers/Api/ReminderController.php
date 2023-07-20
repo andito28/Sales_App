@@ -21,7 +21,7 @@ class ReminderController extends Controller
             $hour_reminder = date('h',strtotime($reminder->time));
             $minute_reminder = date('i',strtotime($reminder->time));
             if($hour_reminder == $date_now->hour){
-                if($date_now->minute >= $minute_reminder  && $date_now->minute <=  ($minute_reminder+1) ){
+                if($date_now->minute >= $minute_reminder  && $date_now->minute < ($minute_reminder+1) ){
                     Notification::create([
                         'user_id' => $reminder->user_id,
                         'notification' => $reminder->title
